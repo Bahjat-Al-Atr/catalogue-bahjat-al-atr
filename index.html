@@ -3,302 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bahjat Al Atr - Catalogue Sécurisé</title>
+    <title>Bahjat Al Atr - Catalogue de Luxe</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #8a6d3b;
-            --secondary-color: #f9f2e8;
-            --accent-color: #d4b996;
-            --text-color: #333;
-            --light-text: #777;
-            --white: #fff;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --dark-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            --primary-gold: #d4af37;
+            --dark-gold: #b8941f;
+            --dark-brown: #2c1a0a;
+            --black: #000000;
+            --light-gold: #f4e4a8;
+            --cream: #f8f4e9;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --glow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Playfair Display', 'Times New Roman', serif;
         }
 
         body {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            background: linear-gradient(135deg, var(--dark-brown) 0%, var(--black) 100%);
+            color: var(--cream);
+            line-height: 1.7;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* SECURITE */
-        .security-banner {
-            background: linear-gradient(135deg, #8a6d3b, #6b5429);
-            color: white;
-            padding: 10px;
-            text-align: center;
-            font-size: 0.9rem;
-            border-bottom: 2px solid #d4b996;
-        }
-
-        .security-banner i {
-            margin-right: 8px;
-        }
-
-        .login-protection {
+        .luxury-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            display: flex;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(44, 26, 10, 0.8) 0%, transparent 50%);
+            z-index: -1;
         }
 
-        .login-form {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Luxueux */
+        .luxury-header {
             text-align: center;
-            max-width: 450px;
-            width: 90%;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            padding: 50px 0;
+            background: linear-gradient(135deg, rgba(44, 26, 10, 0.9), rgba(0, 0, 0, 0.9));
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--primary-gold);
+            position: relative;
+            overflow: hidden;
         }
 
-        .login-form h2 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
+        .luxury-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
         }
 
-        .login-form p {
-            color: var(--light-text);
+        .brand-title {
+            font-size: 3.5rem;
+            color: var(--primary-gold);
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+            letter-spacing: 3px;
+        }
+
+        .brand-subtitle {
+            font-size: 1.3rem;
+            color: var(--light-gold);
+            font-style: italic;
             margin-bottom: 25px;
         }
 
-        .password-input {
-            width: 100%;
-            padding: 15px 20px;
-            margin: 20px 0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            text-align: center;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
+        .access-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
         }
 
-        .password-input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(138, 109, 59, 0.2);
-        }
-
-        /* Reste du CSS identique */
-        header {
-            text-align: center;
-            padding: 30px 0;
-            background-color: var(--white);
-            box-shadow: var(--shadow);
-            border-radius: 10px;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .admin-toggle {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            background-color: var(--primary-color);
-            color: var(--white);
+        /* Boutons de luxe */
+        .luxury-btn {
+            background: linear-gradient(135deg, var(--primary-gold), var(--dark-gold));
+            color: var(--dark-brown);
             border: none;
-            padding: 12px 18px;
+            padding: 15px 30px;
             border-radius: 50px;
             cursor: pointer;
-            z-index: 100;
-            box-shadow: var(--shadow);
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.4s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .admin-toggle:hover {
-            background-color: #7a5d2b;
-            transform: translateY(-2px);
-        }
-
-        .admin-panel {
-            display: none;
-            background-color: var(--white);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-            border-left: 5px solid var(--primary-color);
-        }
-
-        .admin-panel.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .admin-title {
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--accent-color);
-            font-size: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 1rem;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(138, 109, 59, 0.2);
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .btn {
-            background-color: var(--primary-color);
-            color: var(--white);
-            border: none;
-            padding: 14px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
             gap: 10px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn:hover {
-            background-color: #7a5d2b;
-            transform: translateY(-2px);
-            box-shadow: var(--dark-shadow);
+        .luxury-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
         }
 
-        .btn-secondary {
-            background-color: var(--accent-color);
-            color: var(--text-color);
+        .luxury-btn:hover::before {
+            left: 100%;
         }
 
-        .btn-secondary:hover {
-            background-color: #c4a87c;
+        .luxury-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--glow);
         }
 
-        .btn-danger {
-            background-color: #e74c3c;
+        .luxury-btn-secondary {
+            background: transparent;
+            color: var(--primary-gold);
+            border: 2px solid var(--primary-gold);
         }
 
-        .btn-danger:hover {
-            background-color: #c0392b;
+        .luxury-btn-secondary:hover {
+            background: var(--primary-gold);
+            color: var(--dark-brown);
         }
 
+        /* Panneaux d'accès */
+        .access-panel {
+            display: none;
+            background: linear-gradient(135deg, rgba(44, 26, 10, 0.95), rgba(0, 0, 0, 0.95));
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--primary-gold);
+            backdrop-filter: blur(10px);
+        }
+
+        .access-panel.active {
+            display: block;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel-title {
+            color: var(--primary-gold);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2rem;
+            border-bottom: 2px solid var(--primary-gold);
+            padding-bottom: 15px;
+        }
+
+        /* Grille de parfums */
         .perfume-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
+            margin-top: 40px;
         }
 
         .perfume-card {
-            background-color: var(--white);
-            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(44, 26, 10, 0.9), rgba(0, 0, 0, 0.9));
+            border-radius: 20px;
             overflow: hidden;
             box-shadow: var(--shadow);
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            border: 1px solid transparent;
             position: relative;
         }
 
+        .perfume-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
         .perfume-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--dark-shadow);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--glow);
+            border-color: var(--primary-gold);
+        }
+
+        .perfume-card:hover::before {
+            opacity: 1;
         }
 
         .perfume-image {
-            height: 220px;
-            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            height: 250px;
+            background: linear-gradient(135deg, var(--dark-brown), var(--black));
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--white);
-            font-size: 3.5rem;
+            color: var(--primary-gold);
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .perfume-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         .perfume-info {
-            padding: 25px;
+            padding: 30px;
         }
 
         .perfume-name {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-bottom: 12px;
+            font-size: 1.6rem;
+            color: var(--primary-gold);
+            margin-bottom: 15px;
             font-weight: 700;
         }
 
-        .perfume-brand {
-            color: var(--light-text);
-            font-size: 1rem;
-            margin-bottom: 15px;
+        .perfume-details {
+            color: var(--light-gold);
+            margin-bottom: 20px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
         }
 
-        .perfume-gender {
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-bottom: 15px;
+        .perfume-detail {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-size: 0.95rem;
         }
 
         .perfume-notes {
@@ -306,517 +285,187 @@
         }
 
         .notes-title {
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--primary-color);
+            color: var(--primary-gold);
+            margin-bottom: 15px;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 1.1rem;
-        }
-
-        .notes-list {
-            list-style-type: none;
-            display: flex;
-            flex-wrap: wrap;
             gap: 10px;
         }
 
-        .note-tag {
-            background-color: var(--secondary-color);
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: var(--text-color);
-            border: 1px solid var(--accent-color);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--light-text);
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: var(--accent-color);
-        }
-
-        .action-buttons {
+        .notes-grid {
             display: flex;
-            gap: 12px;
-            margin-top: 25px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
-        footer {
+        .note-tag {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--light-gold);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .note-tag:hover {
+            background: rgba(212, 175, 55, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Formulaire admin */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--primary-gold);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            color: var(--cream);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Footer */
+        .luxury-footer {
             text-align: center;
-            padding: 40px 0;
-            margin-top: 60px;
-            color: var(--light-text);
-            font-size: 0.95rem;
-            border-top: 2px solid var(--accent-color);
+            padding: 50px 0;
+            margin-top: 80px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--light-gold);
+        }
+
+        .footer-quote {
+            font-style: italic;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: var(--primary-gold);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
+            .brand-title {
+                font-size: 2.5rem;
+            }
+            
+            .access-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
             .perfume-grid {
                 grid-template-columns: 1fr;
             }
             
-            .admin-toggle {
-                position: static;
-                margin-bottom: 20px;
+            .luxury-btn {
                 width: 100%;
                 justify-content: center;
             }
             
-            .action-buttons {
+            .form-actions {
                 flex-direction: column;
             }
-            
-            .login-form {
-                padding: 30px 20px;
-            }
+        }
+
+        /* État vide */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--light-gold);
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            color: var(--primary-gold);
         }
     </style>
 </head>
 <body>
-    <!-- PROTECTION PAR MOT DE PASSE -->
-    <div class="login-protection" id="loginProtection">
-        <div class="login-form">
-            <h2><i class="fas fa-lock"></i> Accès Administrateur</h2>
-            <p>Veuillez saisir le mot de passe pour accéder au catalogue</p>
-            <input type="password" class="password-input" id="adminPassword" placeholder="Entrez le mot de passe administrateur" autocomplete="off">
-            <button class="btn" onclick="checkPassword()">
-                <i class="fas fa-key"></i> Accéder au Catalogue
-            </button>
-            <p style="margin-top: 20px; font-size: 0.8rem; color: #999;">
-                Accès réservé au personnel autorisé
-            </p>
-        </div>
-    </div>
-
-    <div class="security-banner">
-        <i class="fas fa-shield-alt"></i>
-        Catalogue Bahjat Al Atr - Système Sécurisé
-    </div>
-
+    <div class="luxury-bg"></div>
+    
     <div class="container">
-        <header>
-            <h1>Bahjat Al Atr</h1>
-            <p class="subtitle">Catalogue de Parfums d'Exception</p>
-        </header>
+        <!-- En-tête principal -->
+        <div class="luxury-header fade-in">
+            <h1 class="brand-title">BAHJAT AL ATR</h1>
+            <p class="brand-subtitle">L'Art Olfactif Réinventé</p>
+            
+            <div class="access-buttons">
+                <button class="luxury-btn" onclick="showClientAccess()">
+                    <i class="fas fa-eye"></i>
+                    Accès Client
+                </button>
+                <button class="luxury-btn luxury-btn-secondary" onclick="showAdminAccess()">
+                    <i class="fas fa-lock"></i>
+                    Accès Administrateur
+                </button>
+            </div>
+        </div>
 
-        <button class="admin-toggle" id="adminToggle">
-            <i class="fas fa-cog"></i>
-            Mode Administration
-        </button>
+        <!-- Panneau Client -->
+        <div class="access-panel" id="clientPanel">
+            <h2 class="panel-title">Notre Collection Exclusive</h2>
+            <div class="perfume-grid" id="clientPerfumeGrid">
+                <!-- Parfums chargés dynamiquement -->
+            </div>
+        </div>
 
-        <div class="admin-panel" id="adminPanel">
-            <h2 class="admin-title">Panneau d'Administration Sécurisé</h2>
+        <!-- Panneau Admin -->
+        <div class="access-panel" id="adminPanel">
+            <h2 class="panel-title">Panneau d'Administration</h2>
             
             <form id="perfumeForm">
                 <input type="hidden" id="perfumeId">
                 
                 <div class="form-group">
-                    <label for="perfumeName"><i class="fas fa-pencil-alt"></i> Nom du parfum</label>
-                    <input type="text" id="perfumeName" required>
+                    <label class="form-label">Nom du parfum</label>
+                    <input type="text" class="form-input" id="perfumeName" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="perfumeBrand"><i class="fas fa-tag"></i> Marque</label>
-                    <input type="text" id="perfumeBrand" required>
+                    <label class="form-label">Marque</label>
+                    <input type="text" class="form-input" id="perfumeBrand" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="perfumeSize"><i class="fas fa-flask"></i> Volume</label>
-                    <input type="text" id="perfumeSize" placeholder="ex: 100ml" required>
+                    <label class="form-label">Volume</label>
+                    <input type="text" class="form-input" id="perfumeSize" placeholder="ex: 100ml" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="perfumeGender"><i class="fas fa-venus-mars"></i> Genre</label>
-                    <select id="perfumeGender" required>
-                        <option value="">Sélectionner</option>
-                        <option value="Féminin">Féminin</option>
-                        <option value="Masculin">Masculin</option>
-                        <option value="Unisexe">Unisexe</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="perfumeNotes"><i class="fas fa-leaf"></i> Notes olfactives</label>
-                    <textarea id="perfumeNotes" placeholder="Saisissez les notes séparées par des virgules (ex: Vanille, Ambre, Patchouli)" required></textarea>
-                </div>
-                
-                <div class="action-buttons">
-                    <button type="submit" class="btn" id="savePerfume">
-                        <i class="fas fa-save"></i>
-                        Enregistrer le Parfum
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="cancelEdit">
-                        <i class="fas fa-times"></i>
-                        Annuler
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <div class="perfume-grid" id="perfumeGrid">
-            <!-- Les parfums seront chargés ici dynamiquement -->
-        </div>
-
-        <footer>
-            <p>© 2025 Bahjat Al Atr – Tous droits réservés</p>
-            <p>L'élégance du parfum, née de la passion pour l'art olfactif</p>
-        </footer>
-    </div>
-
-    <script>
-        // MOT DE PASSE ADMIN PERSONNALISÉ
-        const ADMIN_PASSWORD = "doHBDposcqksjnPibizabcqksjncsqiuPBDAP0827190I2`*¨M*%+*+¨1I820JANDPQ";
-        let isAuthenticated = false;
-
-        // Vérification du mot de passe
-        function checkPassword() {
-            const passwordInput = document.getElementById('adminPassword');
-            const password = passwordInput.value.trim();
-            
-            if (password === ADMIN_PASSWORD) {
-                isAuthenticated = true;
-                document.getElementById('loginProtection').style.display = 'none';
-                loadPerfumes();
-                // Effacer le champ de mot de passe après utilisation
-                passwordInput.value = '';
-            } else {
-                // Animation d'erreur
-                passwordInput.style.borderColor = '#e74c3c';
-                passwordInput.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.2)';
-                setTimeout(() => {
-                    passwordInput.style.borderColor = '#ddd';
-                    passwordInput.style.boxShadow = 'none';
-                }, 1000);
-                passwordInput.value = '';
-                passwordInput.focus();
-            }
-        }
-
-        // Permettre la soumission avec Entrée
-        document.getElementById('adminPassword').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkPassword();
-            }
-        });
-
-        // Données initiales basées sur votre PDF
-        const initialPerfumes = [
-            {
-                id: 1,
-                name: "Khamrah Dukhan",
-                brand: "Lattafa",
-                size: "100ml",
-                gender: "Unisexe",
-                notes: ["Piment", "Mandarine", "Incense", "Ciste", "Patchouli", "Fleurs d'oranger", "Tabac", "Praline", "Ambre", "Fèves de tonkas", "Bensoide"]
-            },
-            {
-                id: 2,
-                name: "Venezia Pistachio",
-                brand: "Gulf Fragance Dubai",
-                size: "80ml",
-                gender: "Unisexe",
-                notes: ["Pistaches", "Amandes", "Crème fouettée", "Héliotrope", "Musc", "Bois de santal"]
-            },
-            {
-                id: 3,
-                name: "Yara Rose",
-                brand: "Lattafa",
-                size: "100ml / 35ml",
-                gender: "Féminin",
-                notes: ["Mandarine", "Poire", "Orchidée", "Vanille", "Bois de santale", "Musc", "Héliotrope", "Bergamote"]
-            },
-            {
-                id: 4,
-                name: "Yara Blanc",
-                brand: "Lattafa",
-                size: "100ml",
-                gender: "Féminin",
-                notes: ["Jasmin", "Pêche", "Ambre", "Caramel", "Bois de santal", "Patchouli"]
-            },
-            {
-                id: 5,
-                name: "Yara Black",
-                brand: "Lattafa",
-                size: "100ml",
-                gender: "Masculin",
-                notes: ["Ananas", "Tabac", "Poivre noir", "Vanille", "Café", "Patchouli", "Ambre", "Benjoin", "Bois", "Labdanum"]
-            },
-            {
-                id: 6,
-                name: "Ameerat al Arab Rouge",
-                brand: "Lattafa",
-                size: "50ml",
-                gender: "Féminin",
-                notes: ["Pamplemousse", "Orange", "Jasmin", "Muse Blanc", "Ambre", "Bois de santal", "Vanille", "Fèves de Tonka"]
-            }
-        ];
-
-        // Éléments DOM
-        const adminToggle = document.getElementById('adminToggle');
-        const adminPanel = document.getElementById('adminPanel');
-        const perfumeForm = document.getElementById('perfumeForm');
-        const perfumeGrid = document.getElementById('perfumeGrid');
-        const savePerfumeBtn = document.getElementById('savePerfume');
-        const cancelEditBtn = document.getElementById('cancelEdit');
-
-        // Variables d'état
-        let perfumes = [];
-        let editingId = null;
-
-        // Charger les parfums depuis le localStorage ou les données initiales
-        function loadPerfumes() {
-            if (!isAuthenticated) return;
-            
-            const storedPerfumes = localStorage.getItem('bahjatAlAtrPerfumes');
-            if (storedPerfumes) {
-                perfumes = JSON.parse(storedPerfumes);
-            } else {
-                perfumes = [...initialPerfumes];
-                savePerfumes();
-            }
-            renderPerfumes();
-            setupEventListeners();
-        }
-
-        // Sauvegarder les parfums dans le localStorage
-        function savePerfumes() {
-            if (!isAuthenticated) return;
-            localStorage.setItem('bahjatAlAtrPerfumes', JSON.stringify(perfumes));
-        }
-
-        // Configurer les écouteurs d'événements
-        function setupEventListeners() {
-            adminToggle.addEventListener('click', toggleAdminPanel);
-            perfumeForm.addEventListener('submit', handleFormSubmit);
-            cancelEditBtn.addEventListener('click', cancelEdit);
-        }
-
-        // Basculer l'affichage du panneau d'administration
-        function toggleAdminPanel() {
-            if (!isAuthenticated) {
-                alert('Accès non autorisé. Veuillez vous authentifier.');
-                return;
-            }
-            adminPanel.classList.toggle('active');
-            if (adminPanel.classList.contains('active')) {
-                adminToggle.innerHTML = '<i class="fas fa-times"></i> Fermer le Panneau Admin';
-            } else {
-                adminToggle.innerHTML = '<i class="fas fa-cog"></i> Mode Administration';
-                cancelEdit();
-            }
-        }
-
-        // Gérer la soumission du formulaire
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            
-            if (!isAuthenticated) {
-                alert('Accès non autorisé');
-                return;
-            }
-            
-            const perfumeData = {
-                name: document.getElementById('perfumeName').value.trim(),
-                brand: document.getElementById('perfumeBrand').value.trim(),
-                size: document.getElementById('perfumeSize').value.trim(),
-                gender: document.getElementById('perfumeGender').value,
-                notes: document.getElementById('perfumeNotes').value.split(',').map(note => note.trim()).filter(note => note !== '')
-            };
-            
-            if (editingId) {
-                updatePerfume(editingId, perfumeData);
-            } else {
-                addPerfume(perfumeData);
-            }
-            
-            resetForm();
-            renderPerfumes();
-        }
-
-        // Ajouter un nouveau parfum
-        function addPerfume(perfumeData) {
-            const newPerfume = {
-                id: Date.now(),
-                ...perfumeData
-            };
-            
-            perfumes.push(newPerfume);
-            savePerfumes();
-            alert('Parfum ajouté avec succès au catalogue!');
-        }
-
-        // Modifier un parfum existant
-        function updatePerfume(id, perfumeData) {
-            const index = perfumes.findIndex(p => p.id === id);
-            if (index !== -1) {
-                perfumes[index] = { id, ...perfumeData };
-                savePerfumes();
-                alert('Parfum modifié avec succès!');
-            }
-        }
-
-        // Supprimer un parfum
-        function deletePerfume(id) {
-            if (!isAuthenticated) {
-                alert('Accès non autorisé');
-                return;
-            }
-            
-            if (confirm('Êtes-vous sûr de vouloir supprimer définitivement ce parfum du catalogue ?')) {
-                perfumes = perfumes.filter(p => p.id !== id);
-                savePerfumes();
-                renderPerfumes();
-                
-                if (editingId === id) {
-                    cancelEdit();
-                }
-            }
-        }
-
-        // Remplir le formulaire pour l'édition
-        function editPerfume(id) {
-            if (!isAuthenticated) {
-                alert('Accès non autorisé. Veuillez vous authentifier.');
-                return;
-            }
-            
-            const perfume = perfumes.find(p => p.id === id);
-            if (perfume) {
-                document.getElementById('perfumeId').value = perfume.id;
-                document.getElementById('perfumeName').value = perfume.name;
-                document.getElementById('perfumeBrand').value = perfume.brand;
-                document.getElementById('perfumeSize').value = perfume.size;
-                document.getElementById('perfumeGender').value = perfume.gender;
-                document.getElementById('perfumeNotes').value = perfume.notes.join(', ');
-                
-                editingId = id;
-                savePerfumeBtn.innerHTML = '<i class="fas fa-edit"></i> Modifier le Parfum';
-                
-                if (!adminPanel.classList.contains('active')) {
-                    toggleAdminPanel();
-                }
-                
-                // Scroll vers le formulaire
-                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        // Annuler l'édition
-        function cancelEdit() {
-            resetForm();
-            editingId = null;
-            savePerfumeBtn.innerHTML = '<i class="fas fa-save"></i> Enregistrer le Parfum';
-        }
-
-        // Réinitialiser le formulaire
-        function resetForm() {
-            perfumeForm.reset();
-            document.getElementById('perfumeId').value = '';
-        }
-
-        // Afficher les parfums dans la grille
-        function renderPerfumes() {
-            if (!isAuthenticated) return;
-            
-            if (perfumes.length === 0) {
-                perfumeGrid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-wind"></i>
-                        <h3>Catalogue Vide</h3>
-                        <p>Aucun parfum n'est actuellement dans le catalogue.</p>
-                        <p>Utilisez le panneau d'administration pour ajouter vos premiers parfums.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            perfumeGrid.innerHTML = perfumes.map(perfume => `
-                <div class="perfume-card">
-                    <div class="perfume-image">
-                        <i class="fas fa-wind"></i>
-                    </div>
-                    <div class="perfume-info">
-                        <h3 class="perfume-name">${perfume.name}</h3>
-                        <div class="perfume-brand">
-                            <i class="fas fa-tag"></i>
-                            ${perfume.brand} • ${perfume.size}
-                        </div>
-                        <div class="perfume-gender">
-                            <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
-                            ${perfume.gender}
-                        </div>
-                        <div class="perfume-notes">
-                            <div class="notes-title">
-                                <i class="fas fa-leaf"></i>
-                                Notes Olfactives
-                            </div>
-                            <ul class="notes-list">
-                                ${perfume.notes.map(note => `<li class="note-tag">${note}</li>`).join('')}
-                            </ul>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn btn-secondary" onclick="editPerfume(${perfume.id})">
-                                <i class="fas fa-edit"></i>
-                                Modifier
-                            </button>
-                            <button class="btn btn-danger" onclick="deletePerfume(${perfume.id})">
-                                <i class="fas fa-trash"></i>
-                                Supprimer
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Obtenir l'icône selon le genre
-        function getGenderIcon(gender) {
-            switch(gender) {
-                case 'Féminin': return 'venus';
-                case 'Masculin': return 'mars';
-                default: return 'neuter';
-            }
-        }
-
-        // Rendre les fonctions accessibles globalement
-        window.editPerfume = editPerfume;
-        window.deletePerfume = deletePerfume;
-        window.checkPassword = checkPassword;
-
-        // Protection supplémentaire
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            return false;
-        });
-        
-        document.addEventListener('keydown', function(e) {
-            // Bloquer F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-            if (
-                e.key === 'F12' ||
-                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-                (e.ctrlKey && e.key === 'u')
-            ) {
-                e.preventDefault();
-                return false;
-            }
-        });
-
-        // Masquer le contenu jusqu'à l'authentification
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.style.visibility = 'hidden';
-            document.getElementById('loginProtection').style.display = 'flex';
-            document.getElementById('adminPassword').focus();
-        });
-    </script>
-</body>
-</html>
+                    <label class="form-label">Genre</label>
+                    <select class="
