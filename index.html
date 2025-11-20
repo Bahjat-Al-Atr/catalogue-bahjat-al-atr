@@ -468,4 +468,332 @@
                 
                 <div class="form-group">
                     <label class="form-label">Genre</label>
-                    <select class="
+                    <select class="form-input" id="perfumeGender" required>
+                        <option value="">Sélectionner</option>
+                        <option value="Féminin">Féminin</option>
+                        <option value="Masculin">Masculin</option>
+                        <option value="Unisexe">Unisexe</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notes olfactives</label>
+                    <textarea class="form-input" id="perfumeNotes" placeholder="Saisissez les notes séparées par des virgules" required></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="luxury-btn" id="savePerfume">
+                        <i class="fas fa-save"></i>
+                        Enregistrer
+                    </button>
+                    <button type="button" class="luxury-btn luxury-btn-secondary" id="cancelEdit">
+                        <i class="fas fa-times"></i>
+                        Annuler
+                    </button>
+                </div>
+            </form>
+
+            <div class="perfume-grid" id="adminPerfumeGrid" style="margin-top: 50px;">
+                <!-- Parfums avec options admin -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="luxury-footer">
+            <p>© 2025 Bahjat Al Atr – Tous droits réservés</p>
+            <p class="footer-quote">"L'élégance du parfum, née de la passion pour l'art olfactif"</p>
+        </div>
+    </div>
+
+    <script>
+        // Données initiales
+        const initialPerfumes = [
+            {
+                id: 1,
+                name: "Khamrah Dukhan",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Unisexe",
+                notes: ["Piment", "Mandarine", "Incense", "Ciste", "Patchouli", "Fleurs d'oranger", "Tabac", "Praline", "Ambre", "Fèves de tonkas", "Bensoide"]
+            },
+            {
+                id: 2,
+                name: "Venezia Pistachio",
+                brand: "Gulf Fragance Dubai",
+                size: "80ml",
+                gender: "Unisexe",
+                notes: ["Pistaches", "Amandes", "Crème fouettée", "Héliotrope", "Musc", "Bois de santal"]
+            },
+            {
+                id: 3,
+                name: "Yara Rose",
+                brand: "Lattafa",
+                size: "100ml / 35ml",
+                gender: "Féminin",
+                notes: ["Mandarine", "Poire", "Orchidée", "Vanille", "Bois de santale", "Musc", "Héliotrope", "Bergamote"]
+            },
+            {
+                id: 4,
+                name: "Yara Blanc",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Féminin",
+                notes: ["Jasmin", "Pêche", "Ambre", "Caramel", "Bois de santal", "Patchouli"]
+            },
+            {
+                id: 5,
+                name: "Yara Black",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Masculin",
+                notes: ["Ananas", "Tabac", "Poivre noir", "Vanille", "Café", "Patchouli", "Ambre", "Benjoin", "Bois", "Labdanum"]
+            },
+            {
+                id: 6,
+                name: "Ameerat al Arab Rouge",
+                brand: "Lattafa",
+                size: "50ml",
+                gender: "Féminin",
+                notes: ["Pamplemousse", "Orange", "Jasmin", "Muse Blanc", "Ambre", "Bois de santal", "Vanille", "Fèves de Tonka"]
+            }
+        ];
+
+        // Variables globales
+        let perfumes = [];
+        let editingId = null;
+        let isAdminMode = false;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPerfumes();
+            showClientAccess(); // Afficher directement l'accès client
+        });
+
+        // Charger les parfums
+        function loadPerfumes() {
+            const storedPerfumes = localStorage.getItem('bahjatAlAtrPerfumes');
+            if (storedPerfumes) {
+                perfumes = JSON.parse(storedPerfumes);
+            } else {
+                perfumes = [...initialPerfumes];
+                savePerfumes();
+            }
+            renderClientPerfumes();
+            renderAdminPerfumes();
+        }
+
+        // Sauvegarder les parfums
+        function savePerfumes() {
+            localStorage.setItem('bahjatAlAtrPerfumes', JSON.stringify(perfumes));
+        }
+
+        // Afficher l'accès client
+        function showClientAccess() {
+            document.getElementById('clientPanel').classList.add('active');
+            document.getElementById('adminPanel').classList.remove('active');
+            isAdminMode = false;
+            renderClientPerfumes();
+        }
+
+        // Afficher l'accès admin
+        function showAdminAccess() {
+            const password = prompt('Mot de passe administrateur :');
+            if (password === "doHBDposcqksjnPibizabcqksjncsqiuPBDAP0827190I2`*¨M*%+*+¨1I820JANDPQ") {
+                document.getElementById('adminPanel').classList.add('active');
+                document.getElementById('clientPanel').classList.remove('active');
+                isAdminMode = true;
+                renderAdminPerfumes();
+            } else {
+                alert('Accès refusé');
+            }
+        }
+
+        // Rendu pour les clients
+        function renderClientPerfumes() {
+            const grid = document.getElementById('clientPerfumeGrid');
+            
+            if (perfumes.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-wind"></i>
+                        <h3>Collection en Préparation</h3>
+                        <p>Notre collection de parfums exclusifs arrive bientôt...</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = perfumes.map(perfume => `
+                <div class="perfume-card">
+                    <div class="perfume-image">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="perfume-info">
+                        <h3 class="perfume-name">${perfume.name}</h3>
+                        <div class="perfume-details">
+                            <div class="perfume-detail">
+                                <i class="fas fa-tag"></i>
+                                <span>${perfume.brand}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-flask"></i>
+                                <span>${perfume.size}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
+                                <span>${perfume.gender}</span>
+                            </div>
+                        </div>
+                        <div class="perfume-notes">
+                            <div class="notes-title">
+                                <i class="fas fa-leaf"></i>
+                                Composition Olfactive
+                            </div>
+                            <div class="notes-grid">
+                                ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Rendu pour l'admin
+        function renderAdminPerfumes() {
+            const grid = document.getElementById('adminPerfumeGrid');
+            
+            if (perfumes.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><i class="fas fa-wind"></i><h3>Aucun parfum</h3></div>';
+                return;
+            }
+            
+            grid.innerHTML = perfumes.map(perfume => `
+                <div class="perfume-card">
+                    <div class="perfume-image">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="perfume-info">
+                        <h3 class="perfume-name">${perfume.name}</h3>
+                        <div class="perfume-details">
+                            <div class="perfume-detail">
+                                <i class="fas fa-tag"></i>
+                                <span>${perfume.brand}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-flask"></i>
+                                <span>${perfume.size}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
+                                <span>${perfume.gender}</span>
+                            </div>
+                        </div>
+                        <div class="perfume-notes">
+                            <div class="notes-title">
+                                <i class="fas fa-leaf"></i>
+                                Notes
+                            </div>
+                            <div class="notes-grid">
+                                ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="luxury-btn luxury-btn-secondary" onclick="editPerfume(${perfume.id})">
+                                <i class="fas fa-edit"></i>
+                                Modifier
+                            </button>
+                            <button class="luxury-btn" style="background: #e74c3c;" onclick="deletePerfume(${perfume.id})">
+                                <i class="fas fa-trash"></i>
+                                Supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Gestion du formulaire admin
+        document.getElementById('perfumeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const perfumeData = {
+                name: document.getElementById('perfumeName').value.trim(),
+                brand: document.getElementById('perfumeBrand').value.trim(),
+                size: document.getElementById('perfumeSize').value.trim(),
+                gender: document.getElementById('perfumeGender').value,
+                notes: document.getElementById('perfumeNotes').value.split(',').map(note => note.trim()).filter(note => note !== '')
+            };
+            
+            if (editingId) {
+                updatePerfume(editingId, perfumeData);
+            } else {
+                addPerfume(perfumeData);
+            }
+            
+            resetForm();
+            renderClientPerfumes();
+            renderAdminPerfumes();
+        });
+
+        document.getElementById('cancelEdit').addEventListener('click', resetForm);
+
+        function addPerfume(perfumeData) {
+            const newPerfume = {
+                id: Date.now(),
+                ...perfumeData
+            };
+            perfumes.push(newPerfume);
+            savePerfumes();
+            alert('Parfum ajouté avec succès !');
+        }
+
+        function updatePerfume(id, perfumeData) {
+            const index = perfumes.findIndex(p => p.id === id);
+            if (index !== -1) {
+                perfumes[index] = { id, ...perfumeData };
+                savePerfumes();
+                alert('Parfum modifié avec succès !');
+            }
+        }
+
+        function deletePerfume(id) {
+            if (confirm('Supprimer ce parfum ?')) {
+                perfumes = perfumes.filter(p => p.id !== id);
+                savePerfumes();
+                renderClientPerfumes();
+                renderAdminPerfumes();
+                if (editingId === id) resetForm();
+            }
+        }
+
+        function editPerfume(id) {
+            const perfume = perfumes.find(p => p.id === id);
+            if (perfume) {
+                document.getElementById('perfumeId').value = perfume.id;
+                document.getElementById('perfumeName').value = perfume.name;
+                document.getElementById('perfumeBrand').value = perfume.brand;
+                document.getElementById('perfumeSize').value = perfume.size;
+                document.getElementById('perfumeGender').value = perfume.gender;
+                document.getElementById('perfumeNotes').value = perfume.notes.join(', ');
+                editingId = id;
+                document.getElementById('savePerfume').innerHTML = '<i class="fas fa-edit"></i> Modifier';
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('perfumeForm').reset();
+            document.getElementById('perfumeId').value = '';
+            editingId = null;
+            document.getElementById('savePerfume').innerHTML = '<i class="fas fa-save"></i> Enregistrer';
+        }
+
+        function getGenderIcon(gender) {
+            switch(gender) {
+                case 'Féminin': return 'venus';
+                case 'Masculin': return 'mars';
+                default: return 'neuter';
+            }
+        }
+    </script>
+</body>
+</html>
