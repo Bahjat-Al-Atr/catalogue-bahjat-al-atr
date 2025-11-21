@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bahjat Al Atr - Catalogue Premium</title>
+    <title>Bahjat Al Atr Catalogue</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -650,7 +650,7 @@
         <div class="luxury-header">
             <h1 class="brand-title">BAHJAT AL ATR</h1>
             <div class="gold-bar"></div>
-            <p class="brand-subtitle">MAISON DE PARFUM D'EXCEPTION</p>
+            <p class="brand-subtitle">CATALOGUE</p>
             
             <div class="access-buttons">
                 <button class="luxury-btn" onclick="showClientAccess()">
@@ -766,7 +766,6 @@
     </div>
 
     <script>
-        // [Le code JavaScript reste exactement le même que précédemment]
         // Données initiales avec prix
         const initialPerfumes = [
             {
@@ -1023,3 +1022,102 @@
                             </button>
                         </div>
                     </div>
+                </div>
+            `).join('');
+        }
+
+        // Gestion du formulaire admin
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const perfumeData = {
+                name: document.getElementById('perfumeName').value.trim(),
+                brand: document.getElementById('perfumeBrand').value.trim(),
+                size: document.getElementById('perfumeSize').value.trim(),
+                gender: document.getElementById('perfumeGender').value,
+                price: parseFloat(document.getElementById('perfumePrice').value),
+                notes: document.getElementById('perfumeNotes').value.split(',').map(note => note.trim()).filter(note => note !== '')
+            };
+            
+            if (editingId) {
+                updatePerfume(editingId, perfumeData);
+            } else {
+                addPerfume(perfumeData);
+            }
+            
+            resetForm();
+            renderClientPerfumes();
+            renderAdminPerfumes();
+        }
+
+        function addPerfume(perfumeData) {
+            const newPerfume = {
+                id: Date.now(),
+                ...perfumeData
+            };
+            perfumes.push(newPerfume);
+            savePerfumes();
+            alert('Parfum ajouté avec succès !');
+        }
+
+        function updatePerfume(id, perfumeData) {
+            const index = perfumes.findIndex(p => p.id === id);
+            if (index !== -1) {
+                perfumes[index] = { id, ...perfumeData };
+                savePerfumes();
+                alert('Parfum modifié avec succès !');
+            }
+        }
+
+        function deletePerfume(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce parfum ?')) {
+                perfumes = perfumes.filter(p => p.id !== id);
+                savePerfumes();
+                renderClientPerfumes();
+                renderAdminPerfumes();
+                if (editingId === id) resetForm();
+            }
+        }
+
+        function editPerfume(id) {
+            const perfume = perfumes.find(p => p.id === id);
+            if (perfume) {
+                document.getElementById('perfumeId').value = perfume.id;
+                document.getElementById('perfumeName').value = perfume.name;
+                document.getElementById('perfumeBrand').value = perfume.brand;
+                document.getElementById('perfumeSize').value = perfume.size;
+                document.getElementById('perfumeGender').value = perfume.gender;
+                document.getElementById('perfumePrice').value = perfume.price;
+                document.getElementById('perfumeNotes').value = perfume.notes.join(', ');
+                editingId = id;
+                
+                // Scroll vers le formulaire
+                document.getElementById('perfumeForm').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('perfumeForm').reset();
+            document.getElementById('perfumeId').value = '';
+            editingId = null;
+        }
+
+        function getGenderIcon(gender) {
+            switch(gender) {
+                case 'Féminin': return 'venus';
+                case 'Masculin': return 'mars';
+                default: return 'neuter';
+            }
+        }
+
+        // Rendre les fonctions accessibles globalement
+        window.showClientAccess = showClientAccess;
+        window.showAdminAccess = showAdminAccess;
+        window.editPerfume = editPerfume;
+        window.deletePerfume = deletePerfume;
+        window.openPerfumeModal = openPerfumeModal;
+        window.closeModal = closeModal;
+        window.resetForm = resetForm;
+    </script>
+</body>
+</html>
