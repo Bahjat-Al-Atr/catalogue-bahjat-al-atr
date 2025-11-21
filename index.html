@@ -189,6 +189,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .perfume-card::before {
@@ -304,6 +305,105 @@
             border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
+        /* Modal détaillé */
+        .perfume-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .perfume-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--secondary-dark);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            max-width: 1000px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 500px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-gold);
+        }
+
+        .modal-image {
+            background: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-gold);
+            font-size: 4rem;
+        }
+
+        .modal-info {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .modal-name {
+            font-size: 2rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .modal-price {
+            font-size: 2rem;
+            color: var(--accent-gold);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .modal-details {
+            margin-bottom: 30px;
+        }
+
+        .modal-detail {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            color: var(--text-gray);
+        }
+
+        .modal-notes {
+            margin-top: 20px;
+        }
+
         /* Formulaire admin */
         .admin-form {
             padding: 40px;
@@ -416,9 +516,27 @@
         .footer-quote {
             font-style: italic;
             margin-top: 15px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-light);
             font-weight: 300;
+            margin-bottom: 25px;
+        }
+
+        .linktree-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .linktree-link:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--accent-gold);
         }
 
         /* Responsive */
@@ -453,6 +571,20 @@
             
             .form-row {
                 grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                grid-template-columns: 1fr;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal-image {
+                height: 200px;
+            }
+
+            .modal-info {
+                padding: 30px;
             }
         }
 
@@ -555,7 +687,7 @@
                         <button type="submit" class="modern-btn modern-btn-primary" id="savePerfume">
                             ENREGISTRER
                         </button>
-                        <button type="button" class="modern-btn" id="cancelEdit">
+                        <button type="button" class="modern-btn" id="cancelEdit" onclick="resetForm()">
                             ANNULER
                         </button>
                     </div>
@@ -567,10 +699,30 @@
             </div>
         </div>
 
+        <!-- Modal détaillé -->
+        <div class="perfume-modal" id="perfumeModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="modal-image" id="modalImage">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="modal-info" id="modalInfo">
+                    <!-- Contenu chargé dynamiquement -->
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <div class="luxury-footer">
-            <p>© 2025 BAHJAT AL ATR – TOUS DROITS RÉSERVÉS</p>
-            <p class="footer-quote">L'art olfactif dans sa plus pure expression</p>
+            <p class="footer-quote">"Quand l'élégance du parfum prend tout son sens"</p>
+            <a href="https://linktr.ee/bahjatalatr?utm_source=linktree_profile_share&ltsid=d14ad074-6f51-4fd6-b9d8-c24a648e7166" 
+               class="linktree-link" target="_blank">
+                <i class="fas fa-link"></i>
+                Retrouvez-nous sur Linktree
+            </a>
+            <p style="margin-top: 25px;">© 2025 BAHJAT AL ATR – TOUS DROITS RÉSERVÉS</p>
         </div>
     </div>
 
@@ -646,7 +798,6 @@
         // Configuration des écouteurs d'événements
         function setupEventListeners() {
             document.getElementById('perfumeForm').addEventListener('submit', handleFormSubmit);
-            document.getElementById('cancelEdit').addEventListener('click', resetForm);
         }
 
         // Charger les parfums
@@ -694,6 +845,43 @@
             }).format(price);
         }
 
+        // Ouvrir le modal détaillé
+        function openPerfumeModal(perfumeId) {
+            const perfume = perfumes.find(p => p.id === perfumeId);
+            if (perfume) {
+                document.getElementById('modalInfo').innerHTML = `
+                    <h2 class="modal-name">${perfume.name}</h2>
+                    <div class="modal-price">${formatPrice(perfume.price)} €</div>
+                    <div class="modal-details">
+                        <div class="modal-detail">
+                            <i class="fas fa-tag"></i>
+                            <span><strong>Marque:</strong> ${perfume.brand}</span>
+                        </div>
+                        <div class="modal-detail">
+                            <i class="fas fa-flask"></i>
+                            <span><strong>Volume:</strong> ${perfume.size}</span>
+                        </div>
+                        <div class="modal-detail">
+                            <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
+                            <span><strong>Genre:</strong> ${perfume.gender}</span>
+                        </div>
+                    </div>
+                    <div class="modal-notes">
+                        <div class="notes-title">Composition Olfactive</div>
+                        <div class="notes-grid">
+                            ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('perfumeModal').classList.add('active');
+            }
+        }
+
+        // Fermer le modal
+        function closeModal() {
+            document.getElementById('perfumeModal').classList.remove('active');
+        }
+
         // Rendu pour les clients
         function renderClientPerfumes() {
             const grid = document.getElementById('clientPerfumeGrid');
@@ -710,7 +898,7 @@
             }
             
             grid.innerHTML = perfumes.map(perfume => `
-                <div class="perfume-card">
+                <div class="perfume-card" onclick="openPerfumeModal(${perfume.id})">
                     <div class="perfume-image">
                         <i class="fas fa-gem"></i>
                     </div>
@@ -737,7 +925,8 @@
                         <div class="perfume-notes">
                             <div class="notes-title">Composition</div>
                             <div class="notes-grid">
-                                ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
+                                ${perfume.notes.slice(0, 4).map(note => `<span class="note-tag">${note}</span>`).join('')}
+                                ${perfume.notes.length > 4 ? `<span class="note-tag">+${perfume.notes.length - 4} autres</span>` : ''}
                             </div>
                         </div>
                     </div>
@@ -887,6 +1076,9 @@
         window.showAdminAccess = showAdminAccess;
         window.editPerfume = editPerfume;
         window.deletePerfume = deletePerfume;
+        window.openPerfumeModal = openPerfumeModal;
+        window.closeModal = closeModal;
+        window.resetForm = resetForm;
     </script>
 </body>
 </html>
