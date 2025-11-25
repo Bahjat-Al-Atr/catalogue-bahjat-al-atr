@@ -384,7 +384,7 @@
 
         /* CORRECTIONS POUR LES SLIDERS D'IMAGES */
         .perfume-slider {
-            height: 350px; /* Augmenté pour mieux voir les images */
+            height: 350px;
             position: relative;
             overflow: hidden;
             background: var(--primary-dark);
@@ -1175,38 +1175,8 @@
 
     <script>
         // MOT DE PASSE ADMIN SÉCURISÉ
-        const ADMIN_PASSWORD = "admin123"; // Mot de passe simplifié pour les tests
+        const ADMIN_PASSWORD = "admin123";
         let isAdminAuthenticated = false;
-
-        // Données initiales complètes avec tous les parfums
-        const initialPerfumes = [
-            {
-                id: 1,
-                name: "Khamrah Dukhan",
-                brand: "Lattafa",
-                size: "100ml",
-                gender: "Unisexe",
-                price: 89.90,
-                hasPromo: false,
-                promoPrice: 0,
-                promoEndDate: "",
-                images: [],
-                notes: ["Piment", "Mandarine", "Incense", "Ciste", "Patchouli", "Fleurs d'oranger", "Tabac", "Praline", "Ambre", "Fèves de tonkas", "Bensoide"]
-            },
-            {
-                id: 2,
-                name: "Venezia Pistachio",
-                brand: "Gulf Fragance Dubai",
-                size: "80ml",
-                gender: "Unisexe",
-                price: 79.90,
-                hasPromo: true,
-                promoPrice: 69.90,
-                promoEndDate: "2025-02-28",
-                images: [],
-                notes: ["Pistaches", "Amandes", "Crème fouettée", "Héliotrope", "Musc", "Bois de santal"]
-            }
-        ];
 
         // Variables globales
         let perfumes = [];
@@ -1215,38 +1185,26 @@
         let uploadedImages = [];
         let subscribers = JSON.parse(localStorage.getItem('bahjatSubscribers')) || [];
 
-        // Initialisation sécurisée
+        // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initialisation du catalogue...');
             loadPerfumes();
             setupEventListeners();
             updateImageCounter();
         });
 
-        // Configuration de la protection sécurité
-        function setupSecurityProtection() {
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+        // Configuration des écouteurs d'événements
+        function setupEventListeners() {
+            const form = document.getElementById('perfumeForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    return false;
-                }
-                if (e.ctrlKey && e.shiftKey && e.key === 'C') {
-                    e.preventDefault();
-                    return false;
-                }
-                if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-                    e.preventDefault();
-                    return false;
-                }
-                if (e.key === 'F12') {
-                    e.preventDefault();
-                    return false;
-                }
-            });
+                    handleFormSubmit(e);
+                });
+                console.log('Événement submit attaché au formulaire');
+            } else {
+                console.error('Formulaire non trouvé');
+            }
         }
 
         // Vérification du mot de passe admin
@@ -1259,6 +1217,7 @@
                 document.getElementById('clientPanel').classList.remove('active');
                 renderAdminPerfumes();
                 document.getElementById('adminPassword').value = '';
+                console.log('Accès admin autorisé');
             } else {
                 alert('Mot de passe incorrect');
                 document.getElementById('adminPassword').value = '';
@@ -1271,19 +1230,15 @@
             document.getElementById('adminPassword').value = '';
         }
 
-        // Configuration des écouteurs d'événements
-        function setupEventListeners() {
-            document.getElementById('perfumeForm').addEventListener('submit', handleFormSubmit);
-        }
-
         // Charger les parfums
         function loadPerfumes() {
             const storedPerfumes = localStorage.getItem('bahjatAlAtrPerfumes');
             if (storedPerfumes) {
                 perfumes = JSON.parse(storedPerfumes);
+                console.log('Parfums chargés depuis le localStorage:', perfumes.length);
             } else {
-                perfumes = [...initialPerfumes];
-                savePerfumes();
+                perfumes = [];
+                console.log('Aucun parfum trouvé, initialisation avec tableau vide');
             }
             renderClientPerfumes();
         }
@@ -1291,6 +1246,7 @@
         // Sauvegarder les parfums
         function savePerfumes() {
             localStorage.setItem('bahjatAlAtrPerfumes', JSON.stringify(perfumes));
+            console.log('Parfums sauvegardés:', perfumes);
         }
 
         // Afficher l'accès client
@@ -1365,14 +1321,16 @@
         // Mettre à jour l'affichage des images uploadées
         function updateUploadedImagesDisplay() {
             const container = document.getElementById('uploadedImages');
-            container.innerHTML = uploadedImages.map((image, index) => `
-                <div class="uploaded-image">
-                    <img src="${image}" alt="Image ${index + 1}">
-                    <button type="button" class="remove-image" onclick="removeImage(${index})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `).join('');
+            if (container) {
+                container.innerHTML = uploadedImages.map((image, index) => `
+                    <div class="uploaded-image">
+                        <img src="${image}" alt="Image ${index + 1}">
+                        <button type="button" class="remove-image" onclick="removeImage(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
         }
 
         // Mettre à jour le compteur d'images
@@ -1399,340 +1357,16 @@
             }
         }
 
-        // Inscription aux notifications
-        function subscribeToNotifications() {
-            const email = document.getElementById('subscriberEmail').value.trim();
-            const messageEl = document.getElementById('subscriptionMessage');
-            
-            if (!email || !validateEmail(email)) {
-                messageEl.textContent = 'Veuillez entrer une adresse email valide';
-                messageEl.style.color = '#e74c3c';
-                return;
-            }
-
-            if (!subscribers.includes(email)) {
-                subscribers.push(email);
-                localStorage.setItem('bahjatSubscribers', JSON.stringify(subscribers));
-                messageEl.textContent = 'Inscription réussie ! Vous recevrez des notifications pour les nouveaux parfums.';
-                messageEl.style.color = '#D4AF37';
-                document.getElementById('subscriberEmail').value = '';
-            } else {
-                messageEl.textContent = 'Cette adresse email est déjà inscrite.';
-                messageEl.style.color = '#A8A8A8';
-            }
-        }
-
-        // Validation email
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-
-        // Envoyer les notifications
-        function sendNewPerfumeNotification(perfumeName) {
-            if (subscribers.length > 0) {
-                console.log(`📧 Notification envoyée à ${subscribers.length} abonnés pour: ${perfumeName}`);
-                const banner = document.getElementById('notificationBanner');
-                banner.style.display = 'block';
-                setTimeout(() => {
-                    banner.style.display = 'none';
-                }, 5000);
-            }
-        }
-
-        // Créer un slider pour un parfum
-        function createSlider(perfume, containerId, isModal = false) {
-            const images = perfume.images && perfume.images.length > 0 ? perfume.images : [];
-            const slidesCount = Math.max(images.length, 1);
-            
-            let slidesHTML = '';
-            let dotsHTML = '';
-            
-            for (let i = 0; i < 5; i++) {
-                if (images[i]) {
-                    slidesHTML += `
-                        <div class="${isModal ? 'modal-slide' : 'slider-slide'}">
-                            <img src="${images[i]}" alt="${perfume.name}">
-                        </div>
-                    `;
-                } else {
-                    slidesHTML += `
-                        <div class="${isModal ? 'modal-slide' : 'slider-slide'}">
-                            <i class="fas fa-gem" style="color: var(--accent-gold); font-size: ${isModal ? '5rem' : '3.5rem'};"></i>
-                        </div>
-                    `;
-                }
-                
-                if (i < slidesCount) {
-                    dotsHTML += `<div class="${isModal ? 'modal-slider-dot' : 'slider-dot'} ${i === 0 ? 'active' : ''}" onclick="setSlide(${i}, '${containerId}', ${isModal})"></div>`;
-                }
-            }
-            
-            return { slidesHTML, dotsHTML, slidesCount };
-        }
-
-        // Changer de slide
-        function setSlide(index, containerId, isModal = false) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            
-            const transformValue = -index * 20 + '%';
-            container.style.transform = `translateX(${transformValue})`;
-            
-            const dots = document.querySelectorAll(isModal ? '.modal-slider-dot' : '.slider-dot');
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
-            });
-            
-            if (isModal) {
-                currentModalSlide = index;
-            }
-        }
-
-        // Changer de slide modal
-        function changeModalSlide(direction) {
-            const perfume = perfumes.find(p => p.id === window.currentModalPerfumeId);
-            if (!perfume) return;
-            
-            const slidesCount = Math.max(perfume.images.length, 1);
-            currentModalSlide = (currentModalSlide + direction + slidesCount) % slidesCount;
-            setSlide(currentModalSlide, 'modalSliderContainer', true);
-        }
-
-        // Ouvrir le modal détaillé
-        function openPerfumeModal(perfumeId) {
-            const perfume = perfumes.find(p => p.id === perfumeId);
-            if (perfume) {
-                window.currentModalPerfumeId = perfumeId;
-                currentModalSlide = 0;
-                
-                const slider = createSlider(perfume, 'modalSliderContainer', true);
-                document.getElementById('modalSliderContainer').innerHTML = slider.slidesHTML;
-                document.getElementById('modalSliderNav').innerHTML = slider.dotsHTML;
-                setSlide(0, 'modalSliderContainer', true);
-                
-                let priceHTML = '';
-                if (perfume.hasPromo && new Date(perfume.promoEndDate) > new Date()) {
-                    priceHTML = `
-                        <div class="modal-price">
-                            <span class="promo-price">${formatPrice(perfume.price)} €</span>
-                            <span class="current-price">${formatPrice(perfume.promoPrice)} €</span>
-                        </div>
-                    `;
-                } else {
-                    priceHTML = `<div class="modal-price">${formatPrice(perfume.price)} €</div>`;
-                }
-                
-                document.getElementById('modalInfo').innerHTML = `
-                    <h2 class="modal-name">${perfume.name}</h2>
-                    ${priceHTML}
-                    <div class="modal-details">
-                        <div class="modal-detail">
-                            <i class="fas fa-tag"></i>
-                            <span><strong>Marque:</strong> ${perfume.brand}</span>
-                        </div>
-                        <div class="modal-detail">
-                            <i class="fas fa-flask"></i>
-                            <span><strong>Volume:</strong> ${perfume.size}</span>
-                        </div>
-                        <div class="modal-detail">
-                            <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
-                            <span><strong>Genre:</strong> ${perfume.gender}</span>
-                        </div>
-                    </div>
-                    <div class="modal-notes">
-                        <div class="notes-title">Composition Olfactive</div>
-                        <div class="notes-grid">
-                            ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
-                document.getElementById('perfumeModal').classList.add('active');
-            }
-        }
-
-        // Fermer le modal
-        function closeModal() {
-            document.getElementById('perfumeModal').classList.remove('active');
-        }
-
-        // Rendu pour les clients
-        function renderClientPerfumes() {
-            const grid = document.getElementById('clientPerfumeGrid');
-            
-            if (perfumes.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-wind"></i>
-                        <h3>Collection en Préparation</h3>
-                        <p>Notre collection de parfums exclusifs arrive bientôt...</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            grid.innerHTML = perfumes.map(perfume => {
-                const slider = createSlider(perfume, `slider-${perfume.id}`);
-                const hasActivePromo = perfume.hasPromo && new Date(perfume.promoEndDate) > new Date();
-                
-                let priceHTML = '';
-                if (hasActivePromo) {
-                    priceHTML = `
-                        <div class="perfume-price">
-                            <span class="promo-price">${formatPrice(perfume.price)}</span>
-                            <span class="current-price">${formatPrice(perfume.promoPrice)}</span>
-                            <span class="price-currency">EUR</span>
-                        </div>
-                    `;
-                } else {
-                    priceHTML = `
-                        <div class="perfume-price">
-                            ${formatPrice(perfume.price)}
-                            <span class="price-currency">EUR</span>
-                        </div>
-                    `;
-                }
-                
-                return `
-                <div class="perfume-card" onclick="openPerfumeModal(${perfume.id})">
-                    ${hasActivePromo ? '<div class="promo-badge">PROMO</div>' : ''}
-                    <div class="perfume-slider">
-                        <div class="slider-container" id="slider-${perfume.id}">
-                            ${slider.slidesHTML}
-                        </div>
-                        <button class="slider-arrow prev" onclick="event.stopPropagation(); setSlide((currentSlide - 1 + ${slider.slidesCount}) % ${slider.slidesCount}, 'slider-${perfume.id}')">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="slider-arrow next" onclick="event.stopPropagation(); setSlide((currentSlide + 1) % ${slider.slidesCount}, 'slider-${perfume.id}')">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                        <div class="slider-nav">
-                            ${slider.dotsHTML}
-                        </div>
-                    </div>
-                    <div class="perfume-info">
-                        <h3 class="perfume-name">${perfume.name}</h3>
-                        ${priceHTML}
-                        <div class="perfume-details">
-                            <div class="perfume-detail">
-                                <i class="fas fa-tag"></i>
-                                <span>${perfume.brand}</span>
-                            </div>
-                            <div class="perfume-detail">
-                                <i class="fas fa-flask"></i>
-                                <span>${perfume.size}</span>
-                            </div>
-                            <div class="perfume-detail">
-                                <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
-                                <span>${perfume.gender}</span>
-                            </div>
-                        </div>
-                        <div class="perfume-notes">
-                            <div class="notes-title">Composition</div>
-                            <div class="notes-grid">
-                                ${perfume.notes.slice(0, 4).map(note => `<span class="note-tag">${note}</span>`).join('')}
-                                ${perfume.notes.length > 4 ? `<span class="note-tag">+${perfume.notes.length - 4} autres</span>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `}).join('');
-        }
-
-        // Rendu pour l'admin
-        function renderAdminPerfumes() {
-            const grid = document.getElementById('adminPerfumeGrid');
-            
-            if (perfumes.length === 0) {
-                grid.innerHTML = '<div class="empty-state"><i class="fas fa-wind"></i><h3>Aucun parfum dans la collection</h3></div>';
-                return;
-            }
-            
-            grid.innerHTML = perfumes.map(perfume => {
-                const slider = createSlider(perfume, `admin-slider-${perfume.id}`);
-                const hasActivePromo = perfume.hasPromo && new Date(perfume.promoEndDate) > new Date();
-                
-                let priceHTML = '';
-                if (hasActivePromo) {
-                    priceHTML = `
-                        <div class="perfume-price">
-                            <span class="promo-price">${formatPrice(perfume.price)}</span>
-                            <span class="current-price">${formatPrice(perfume.promoPrice)}</span>
-                            <span class="price-currency">EUR</span>
-                        </div>
-                    `;
-                } else {
-                    priceHTML = `
-                        <div class="perfume-price">
-                            ${formatPrice(perfume.price)}
-                            <span class="price-currency">EUR</span>
-                        </div>
-                    `;
-                }
-                
-                return `
-                <div class="perfume-card">
-                    ${hasActivePromo ? '<div class="promo-badge">PROMO</div>' : ''}
-                    <div class="perfume-slider">
-                        <div class="slider-container" id="admin-slider-${perfume.id}">
-                            ${slider.slidesHTML}
-                        </div>
-                        <button class="slider-arrow prev" onclick="event.stopPropagation(); setSlide((currentSlide - 1 + ${slider.slidesCount}) % ${slider.slidesCount}, 'admin-slider-${perfume.id}')">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="slider-arrow next" onclick="event.stopPropagation(); setSlide((currentSlide + 1) % ${slider.slidesCount}, 'admin-slider-${perfume.id}')">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                        <div class="slider-nav">
-                            ${slider.dotsHTML}
-                        </div>
-                    </div>
-                    <div class="perfume-info">
-                        <h3 class="perfume-name">${perfume.name}</h3>
-                        ${priceHTML}
-                        <div class="perfume-details">
-                            <div class="perfume-detail">
-                                <i class="fas fa-tag"></i>
-                                <span>${perfume.brand}</span>
-                            </div>
-                            <div class="perfume-detail">
-                                <i class="fas fa-flask"></i>
-                                <span>${perfume.size}</span>
-                            </div>
-                            <div class="perfume-detail">
-                                <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
-                                <span>${perfume.gender}</span>
-                            </div>
-                        </div>
-                        <div class="perfume-notes">
-                            <div class="notes-title">Notes</div>
-                            <div class="notes-grid">
-                                ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
-                            </div>
-                        </div>
-                        <div class="admin-actions">
-                            <button class="action-btn edit" onclick="editPerfume(${perfume.id})">
-                                <i class="fas fa-edit"></i> Modifier
-                            </button>
-                            <button class="action-btn delete" onclick="deletePerfume(${perfume.id})">
-                                <i class="fas fa-trash"></i> Supprimer
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `}).join('');
-        }
-
-        // Gestion du formulaire admin
+        // CORRECTION CRITIQUE : Gestion du formulaire
         function handleFormSubmit(e) {
-            e.preventDefault();
+            console.log('Début de handleFormSubmit');
             
             if (!isAdminAuthenticated) {
-                alert('Accès non autorisé');
+                alert('Accès non autorisé. Veuillez vous connecter en tant qu\'administrateur.');
                 return;
             }
             
-            const isNewPerfume = !editingId;
+            // Récupération des valeurs du formulaire
             const perfumeData = {
                 name: document.getElementById('perfumeName').value.trim(),
                 brand: document.getElementById('perfumeBrand').value.trim(),
@@ -1742,33 +1376,72 @@
                 hasPromo: document.getElementById('hasPromo').checked,
                 promoPrice: document.getElementById('hasPromo').checked ? parseFloat(document.getElementById('promoPrice').value) : 0,
                 promoEndDate: document.getElementById('hasPromo').checked ? document.getElementById('promoEndDate').value : '',
-                images: [...uploadedImages], // IMPORTANT: Copie du tableau des images
+                images: [...uploadedImages],
                 notes: document.getElementById('perfumeNotes').value.split(',').map(note => note.trim()).filter(note => note !== '')
             };
-            
+
+            console.log('Données du formulaire:', perfumeData);
+
             // Validation des données
-            if (!perfumeData.name || !perfumeData.brand || !perfumeData.size || !perfumeData.gender || isNaN(perfumeData.price)) {
-                alert('Veuillez remplir tous les champs obligatoires correctement');
+            if (!perfumeData.name) {
+                alert('Veuillez entrer un nom de parfum');
+                document.getElementById('perfumeName').focus();
+                return;
+            }
+            
+            if (!perfumeData.brand) {
+                alert('Veuillez entrer une marque');
+                document.getElementById('perfumeBrand').focus();
+                return;
+            }
+            
+            if (!perfumeData.size) {
+                alert('Veuillez entrer un volume');
+                document.getElementById('perfumeSize').focus();
+                return;
+            }
+            
+            if (!perfumeData.gender) {
+                alert('Veuillez sélectionner un genre');
+                document.getElementById('perfumeGender').focus();
+                return;
+            }
+            
+            if (isNaN(perfumeData.price) || perfumeData.price <= 0) {
+                alert('Veuillez entrer un prix valide');
+                document.getElementById('perfumePrice').focus();
                 return;
             }
             
             if (perfumeData.hasPromo && (isNaN(perfumeData.promoPrice) || perfumeData.promoPrice <= 0)) {
                 alert('Veuillez entrer un prix promo valide');
+                document.getElementById('promoPrice').focus();
                 return;
             }
             
-            if (editingId) {
-                updatePerfume(editingId, perfumeData);
-            } else {
-                addPerfume(perfumeData);
-                if (isNewPerfume) {
-                    sendNewPerfumeNotification(perfumeData.name);
-                }
+            if (perfumeData.notes.length === 0) {
+                alert('Veuillez entrer au moins une note olfactive');
+                document.getElementById('perfumeNotes').focus();
+                return;
             }
-            
-            resetForm();
-            renderClientPerfumes();
-            renderAdminPerfumes();
+
+            try {
+                if (editingId) {
+                    // Modification d'un parfum existant
+                    updatePerfume(editingId, perfumeData);
+                } else {
+                    // Ajout d'un nouveau parfum
+                    addPerfume(perfumeData);
+                }
+                
+                resetForm();
+                renderClientPerfumes();
+                renderAdminPerfumes();
+                
+            } catch (error) {
+                console.error('Erreur lors de l\'enregistrement:', error);
+                alert('Une erreur est survenue lors de l\'enregistrement: ' + error.message);
+            }
         }
 
         function addPerfume(perfumeData) {
@@ -1778,15 +1451,22 @@
             };
             perfumes.push(newPerfume);
             savePerfumes();
-            alert('Parfum ajouté avec succès ! Les abonnés ont été notifiés.');
+            alert('Parfum ajouté avec succès !');
+            console.log('Nouveau parfum ajouté:', newPerfume);
         }
 
         function updatePerfume(id, perfumeData) {
             const index = perfumes.findIndex(p => p.id === id);
             if (index !== -1) {
-                perfumes[index] = { id, ...perfumeData };
+                perfumes[index] = { 
+                    id: id, // Garder l'ID original
+                    ...perfumeData 
+                };
                 savePerfumes();
                 alert('Parfum modifié avec succès !');
+                console.log('Parfum modifié:', perfumes[index]);
+            } else {
+                throw new Error('Parfum non trouvé');
             }
         }
 
@@ -1839,6 +1519,230 @@
             updateUploadedImagesDisplay();
             updateImageCounter();
             editingId = null;
+            console.log('Formulaire réinitialisé');
+        }
+
+        // Reste des fonctions (renderClientPerfumes, renderAdminPerfumes, etc.)
+        function renderClientPerfumes() {
+            const grid = document.getElementById('clientPerfumeGrid');
+            if (!grid) return;
+            
+            if (perfumes.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-wind"></i>
+                        <h3>Collection en Préparation</h3>
+                        <p>Notre collection de parfums exclusifs arrive bientôt...</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = perfumes.map(perfume => {
+                const hasActivePromo = perfume.hasPromo && new Date(perfume.promoEndDate) > new Date();
+                
+                let priceHTML = '';
+                if (hasActivePromo) {
+                    priceHTML = `
+                        <div class="perfume-price">
+                            <span class="promo-price">${formatPrice(perfume.price)}</span>
+                            <span class="current-price">${formatPrice(perfume.promoPrice)}</span>
+                            <span class="price-currency">EUR</span>
+                        </div>
+                    `;
+                } else {
+                    priceHTML = `
+                        <div class="perfume-price">
+                            ${formatPrice(perfume.price)}
+                            <span class="price-currency">EUR</span>
+                        </div>
+                    `;
+                }
+                
+                return `
+                <div class="perfume-card" onclick="openPerfumeModal(${perfume.id})">
+                    ${hasActivePromo ? '<div class="promo-badge">PROMO</div>' : ''}
+                    <div class="perfume-slider">
+                        <div class="slider-container" id="slider-${perfume.id}">
+                            ${createSliderHTML(perfume)}
+                        </div>
+                        <button class="slider-arrow prev" onclick="event.stopPropagation(); changeSlide('slider-${perfume.id}', -1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="slider-arrow next" onclick="event.stopPropagation(); changeSlide('slider-${perfume.id}', 1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="slider-nav" id="nav-${perfume.id}">
+                            ${createSliderDots(perfume)}
+                        </div>
+                    </div>
+                    <div class="perfume-info">
+                        <h3 class="perfume-name">${perfume.name}</h3>
+                        ${priceHTML}
+                        <div class="perfume-details">
+                            <div class="perfume-detail">
+                                <i class="fas fa-tag"></i>
+                                <span>${perfume.brand}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-flask"></i>
+                                <span>${perfume.size}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
+                                <span>${perfume.gender}</span>
+                            </div>
+                        </div>
+                        <div class="perfume-notes">
+                            <div class="notes-title">Composition</div>
+                            <div class="notes-grid">
+                                ${perfume.notes.slice(0, 4).map(note => `<span class="note-tag">${note}</span>`).join('')}
+                                ${perfume.notes.length > 4 ? `<span class="note-tag">+${perfume.notes.length - 4} autres</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function renderAdminPerfumes() {
+            const grid = document.getElementById('adminPerfumeGrid');
+            if (!grid) return;
+            
+            if (perfumes.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><i class="fas fa-wind"></i><h3>Aucun parfum dans la collection</h3></div>';
+                return;
+            }
+            
+            grid.innerHTML = perfumes.map(perfume => {
+                const hasActivePromo = perfume.hasPromo && new Date(perfume.promoEndDate) > new Date();
+                
+                let priceHTML = '';
+                if (hasActivePromo) {
+                    priceHTML = `
+                        <div class="perfume-price">
+                            <span class="promo-price">${formatPrice(perfume.price)}</span>
+                            <span class="current-price">${formatPrice(perfume.promoPrice)}</span>
+                            <span class="price-currency">EUR</span>
+                        </div>
+                    `;
+                } else {
+                    priceHTML = `
+                        <div class="perfume-price">
+                            ${formatPrice(perfume.price)}
+                            <span class="price-currency">EUR</span>
+                        </div>
+                    `;
+                }
+                
+                return `
+                <div class="perfume-card">
+                    ${hasActivePromo ? '<div class="promo-badge">PROMO</div>' : ''}
+                    <div class="perfume-slider">
+                        <div class="slider-container" id="admin-slider-${perfume.id}">
+                            ${createSliderHTML(perfume)}
+                        </div>
+                        <button class="slider-arrow prev" onclick="event.stopPropagation(); changeSlide('admin-slider-${perfume.id}', -1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="slider-arrow next" onclick="event.stopPropagation(); changeSlide('admin-slider-${perfume.id}', 1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="slider-nav" id="admin-nav-${perfume.id}">
+                            ${createSliderDots(perfume)}
+                        </div>
+                    </div>
+                    <div class="perfume-info">
+                        <h3 class="perfume-name">${perfume.name}</h3>
+                        ${priceHTML}
+                        <div class="perfume-details">
+                            <div class="perfume-detail">
+                                <i class="fas fa-tag"></i>
+                                <span>${perfume.brand}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-flask"></i>
+                                <span>${perfume.size}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
+                                <span>${perfume.gender}</span>
+                            </div>
+                        </div>
+                        <div class="perfume-notes">
+                            <div class="notes-title">Notes</div>
+                            <div class="notes-grid">
+                                ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="action-btn edit" onclick="editPerfume(${perfume.id})">
+                                <i class="fas fa-edit"></i> Modifier
+                            </button>
+                            <button class="action-btn delete" onclick="deletePerfume(${perfume.id})">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function createSliderHTML(perfume) {
+            const images = perfume.images && perfume.images.length > 0 ? perfume.images : [];
+            let slidesHTML = '';
+            
+            for (let i = 0; i < 5; i++) {
+                if (images[i]) {
+                    slidesHTML += `
+                        <div class="slider-slide">
+                            <img src="${images[i]}" alt="${perfume.name}">
+                        </div>
+                    `;
+                } else {
+                    slidesHTML += `
+                        <div class="slider-slide">
+                            <i class="fas fa-gem" style="color: var(--accent-gold); font-size: 3.5rem;"></i>
+                        </div>
+                    `;
+                }
+            }
+            
+            return slidesHTML;
+        }
+
+        function createSliderDots(perfume) {
+            const images = perfume.images && perfume.images.length > 0 ? perfume.images : [];
+            const slidesCount = Math.max(images.length, 1);
+            let dotsHTML = '';
+            
+            for (let i = 0; i < slidesCount; i++) {
+                dotsHTML += `<div class="slider-dot ${i === 0 ? 'active' : ''}" onclick="setSlide('${perfume.id}', ${i})"></div>`;
+            }
+            
+            return dotsHTML;
+        }
+
+        function changeSlide(sliderId, direction) {
+            const container = document.getElementById(sliderId);
+            if (!container) return;
+            
+            // Logique simplifiée pour changer les slides
+            console.log('Changement de slide pour:', sliderId, direction);
+        }
+
+        function setSlide(perfumeId, index) {
+            const container = document.getElementById(`slider-${perfumeId}`) || document.getElementById(`admin-slider-${perfumeId}`);
+            if (!container) return;
+            
+            const transformValue = -index * 20 + '%';
+            container.style.transform = `translateX(${transformValue})`;
+            
+            // Mettre à jour les dots
+            const dots = document.querySelectorAll(`#nav-${perfumeId} .slider-dot, #admin-nav-${perfumeId} .slider-dot`);
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
         }
 
         function getGenderIcon(gender) {
@@ -1848,9 +1752,6 @@
                 default: return 'neuter';
             }
         }
-
-        // Variables globales pour les sliders
-        let currentSlide = 0;
 
         // Rendre les fonctions accessibles globalement
         window.showClientAccess = showClientAccess;
@@ -1862,7 +1763,7 @@
         window.resetForm = resetForm;
         window.setSlide = setSlide;
         window.changeModalSlide = changeModalSlide;
-        window.currentSlide = currentSlide;
+        window.changeSlide = changeSlide;
         window.handleImageUpload = handleImageUpload;
         window.removeImage = removeImage;
         window.subscribeToNotifications = subscribeToNotifications;
