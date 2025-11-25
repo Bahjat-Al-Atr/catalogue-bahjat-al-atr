@@ -383,9 +383,37 @@
             transform: scaleX(1);
         }
 
-        /* CORRECTIONS POUR LES IMAGES 1334x2000 */
+        /* MODIFICATIONS POUR LES IMAGES */
+        .slider-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: var(--primary-dark);
+        }
+
+        .modal-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: var(--primary-dark);
+        }
+
+        .uploaded-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Ajustement de la hauteur du slider pour mieux afficher les images 1334x2000 */
         .perfume-slider {
             height: 280px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+        }
+
+        .modal-slider {
+            height: 100%;
             position: relative;
             overflow: hidden;
             background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
@@ -407,13 +435,6 @@
             color: var(--accent-gold);
             font-size: 3.5rem;
             position: relative;
-        }
-
-        .slider-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: var(--primary-dark);
         }
 
         .slider-nav {
@@ -603,13 +624,6 @@
             color: var(--accent-gold);
         }
 
-        .modal-slider {
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
-        }
-
         .modal-slider-container {
             display: flex;
             width: 500%;
@@ -626,13 +640,6 @@
             color: var(--accent-gold);
             font-size: 5rem;
             position: relative;
-        }
-
-        .modal-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: var(--primary-dark);
         }
 
         .modal-slider-nav {
@@ -1105,4 +1112,858 @@
                             </button>
                         </div>
                         <div class="upload-area" onclick="document.getElementById('imageUpload').click()">
-                            <i class="fas fa-cloud-upload-alt
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Cliquez pour uploader des images</p>
+                            <p style="font-size: 0.8rem; color: var(--text-gray); margin-top: 5px;">
+                                Maximum 5 images, formats supportés: JPG, PNG, WEBP<br>
+                                Taille max: 5MB par image
+                            </p>
+                        </div>
+                        <input type="file" id="imageUpload" multiple accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                        <div class="uploaded-images" id="uploadedImages">
+                            <!-- Images uploadées affichées ici -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="luxury-btn" id="savePerfume">
+                            ENREGISTRER
+                        </button>
+                        <button type="button" class="luxury-btn luxury-btn-secondary" id="cancelEdit" onclick="resetForm()">
+                            ANNULER
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="perfume-grid" id="adminPerfumeGrid">
+                <!-- Parfums avec options admin -->
+            </div>
+        </div>
+
+        <!-- Modal détaillé -->
+        <div class="perfume-modal" id="perfumeModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="modal-slider" id="modalSlider">
+                    <div class="modal-slider-container" id="modalSliderContainer">
+                        <!-- Slides chargées dynamiquement -->
+                    </div>
+                    <button class="modal-slider-arrow prev" onclick="changeModalSlide(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="modal-slider-arrow next" onclick="changeModalSlide(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="modal-slider-nav" id="modalSliderNav">
+                        <!-- Points de navigation chargés dynamiquement -->
+                    </div>
+                </div>
+                <div class="modal-info" id="modalInfo">
+                    <!-- Contenu chargé dynamiquement -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="luxury-footer">
+            <p class="footer-quote">"Quand l'élégance du parfum prend tout son sens"</p>
+            <a href="https://linktr.ee/bahjatalatr?utm_source=linktree_profile_share&ltsid=d14ad074-6f51-4fd6-b9d8-c24a648e7166" 
+               class="linktree-link" target="_blank">
+                <i class="fas fa-link"></i>
+                Retrouvez-nous sur Linktree
+            </a>
+            <p style="margin-top: 30px; color: var(--text-gray);">© 2025 BAHJAT AL ATR – TOUS DROITS RÉSERVÉS</p>
+        </div>
+    </div>
+
+    <script>
+        // MOT DE PASSE ADMIN SÉCURISÉ
+        const ADMIN_PASSWORD = "doHBDposcqksjnPibizabcqksjncsqiuPBDAP0827190I2`*¨M*%+*+¨1I820JANDPQ";
+        let isAdminAuthenticated = false;
+
+        // Données initiales complètes avec tous les parfums
+        const initialPerfumes = [
+            {
+                id: 1,
+                name: "Khamrah Dukhan",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Unisexe",
+                price: 89.90,
+                hasPromo: false,
+                promoPrice: 0,
+                promoEndDate: "",
+                images: [],
+                notes: ["Piment", "Mandarine", "Incense", "Ciste", "Patchouli", "Fleurs d'oranger", "Tabac", "Praline", "Ambre", "Fèves de tonkas", "Bensoide"]
+            },
+            {
+                id: 2,
+                name: "Venezia Pistachio",
+                brand: "Gulf Fragance Dubai",
+                size: "80ml",
+                gender: "Unisexe",
+                price: 79.90,
+                hasPromo: true,
+                promoPrice: 69.90,
+                promoEndDate: "2025-02-28",
+                images: [],
+                notes: ["Pistaches", "Amandes", "Crème fouettée", "Héliotrope", "Musc", "Bois de santal"]
+            },
+            {
+                id: 3,
+                name: "Yara Rose",
+                brand: "Lattafa",
+                size: "100ml / 35ml",
+                gender: "Féminin",
+                price: 69.90,
+                hasPromo: false,
+                promoPrice: 0,
+                promoEndDate: "",
+                images: [],
+                notes: ["Mandarine", "Poire", "Orchidée", "Vanille", "Bois de santale", "Musc", "Héliotrope", "Bergamote"]
+            },
+            {
+                id: 4,
+                name: "Yara Blanc",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Féminin",
+                price: 65.90,
+                hasPromo: true,
+                promoPrice: 55.90,
+                promoEndDate: "2025-01-31",
+                images: [],
+                notes: ["Jasmin", "Pêche", "Ambre", "Caramel", "Bois de santal", "Patchouli"]
+            },
+            {
+                id: 5,
+                name: "Yara Black",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Masculin",
+                price: 74.90,
+                hasPromo: false,
+                promoPrice: 0,
+                promoEndDate: "",
+                images: [],
+                notes: ["Ananas", "Tabac", "Poivre noir", "Vanille", "Café", "Patchouli", "Ambre", "Benjoin", "Bois", "Labdanum"]
+            },
+            {
+                id: 6,
+                name: "Ameerat al Arab Rouge",
+                brand: "Lattafa",
+                size: "50ml",
+                gender: "Féminin",
+                price: 59.90,
+                hasPromo: false,
+                promoPrice: 0,
+                promoEndDate: "",
+                images: [],
+                notes: ["Pamplemousse", "Orange", "Jasmin", "Muse Blanc", "Ambre", "Bois de santal", "Vanille", "Fèves de Tonka"]
+            },
+            {
+                id: 7,
+                name: "Khamrah",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Unisexe",
+                price: 85.90,
+                hasPromo: true,
+                promoPrice: 75.90,
+                promoEndDate: "2025-02-15",
+                images: [],
+                notes: ["Cannelle", "Noix de muscade", "Vanille", "Ambre", "Sucre brun", "Tonka"]
+            },
+            {
+                id: 8,
+                name: "Ana Abiyedh Rouge",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Féminin",
+                price: 62.90,
+                hasPromo: false,
+                promoPrice: 0,
+                promoEndDate: "",
+                images: [],
+                notes: ["Framboise", "Pomme", "Violette", "Musc", "Ambre", "Bois de santal"]
+            }
+        ];
+
+        // Variables globales
+        let perfumes = [];
+        let editingId = null;
+        let currentModalSlide = 0;
+        let uploadedImages = [];
+        let subscribers = JSON.parse(localStorage.getItem('bahjatSubscribers')) || [];
+
+        // Initialisation sécurisée
+        document.addEventListener('DOMContentLoaded', function() {
+            // Protection contre l'inspection
+            setupSecurityProtection();
+            loadPerfumes();
+            setupEventListeners();
+            updateImageCounter();
+        });
+
+        // Configuration de la protection sécurité
+        function setupSecurityProtection() {
+            // Bloquer l'inspection
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                    e.preventDefault();
+                    return false;
+                }
+                if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                    e.preventDefault();
+                    return false;
+                }
+                if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                    e.preventDefault();
+                    return false;
+                }
+                if (e.key === 'F12') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Masquer les données sensibles dans la console
+            console.log('%c🔒 Accès sécurisé - Bahjat Al Atr', 'color: #D4AF37; font-size: 16px; font-weight: bold;');
+            console.log('%c⚠️  Cet espace est protégé', 'color: #e74c3c; font-size: 14px;');
+        }
+
+        // Vérification du mot de passe admin
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                isAdminAuthenticated = true;
+                document.getElementById('securityOverlay').style.display = 'none';
+                document.getElementById('adminPanel').classList.add('active');
+                document.getElementById('clientPanel').classList.remove('active');
+                renderAdminPerfumes();
+                // Effacer le champ de mot de passe
+                document.getElementById('adminPassword').value = '';
+            } else {
+                alert('Mot de passe incorrect');
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
+        }
+
+        function closeSecurity() {
+            document.getElementById('securityOverlay').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        // Configuration des écouteurs d'événements
+        function setupEventListeners() {
+            document.getElementById('perfumeForm').addEventListener('submit', handleFormSubmit);
+        }
+
+        // Charger les parfums
+        function loadPerfumes() {
+            const storedPerfumes = localStorage.getItem('bahjatAlAtrPerfumes');
+            if (storedPerfumes) {
+                perfumes = JSON.parse(storedPerfumes);
+            } else {
+                perfumes = [...initialPerfumes];
+                savePerfumes();
+            }
+            renderClientPerfumes();
+        }
+
+        // Sauvegarder les parfums
+        function savePerfumes() {
+            localStorage.setItem('bahjatAlAtrPerfumes', JSON.stringify(perfumes));
+        }
+
+        // Afficher l'accès client
+        function showClientAccess() {
+            if (!isAdminAuthenticated) {
+                document.getElementById('clientPanel').classList.add('active');
+                document.getElementById('adminPanel').classList.remove('active');
+                renderClientPerfumes();
+            }
+        }
+
+        // Afficher l'accès admin
+        function showAdminAccess() {
+            if (!isAdminAuthenticated) {
+                document.getElementById('securityOverlay').style.display = 'flex';
+                document.getElementById('adminPassword').focus();
+            } else {
+                document.getElementById('adminPanel').classList.add('active');
+                document.getElementById('clientPanel').classList.remove('active');
+                renderAdminPerfumes();
+            }
+        }
+
+        // Formatage du prix
+        function formatPrice(price) {
+            return new Intl.NumberFormat('fr-FR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(price);
+        }
+
+        // Toggle des champs promo
+        function togglePromoFields() {
+            const promoFields = document.getElementById('promoFields');
+            const hasPromo = document.getElementById('hasPromo').checked;
+            promoFields.style.display = hasPromo ? 'block' : 'none';
+        }
+
+        // CORRECTION POUR L'ENREGISTREMENT DES IMAGES
+        function handleImageUpload(event) {
+            const files = event.target.files;
+            if (files.length + uploadedImages.length > 5) {
+                alert('Maximum 5 images autorisées');
+                return;
+            }
+
+            for (let file of files) {
+                if (!file.type.startsWith('image/')) continue;
+                
+                // Vérification de la taille du fichier (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('L\'image ' + file.name + ' est trop volumineuse. Maximum 5MB autorisé.');
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages.push(e.target.result);
+                    updateUploadedImagesDisplay();
+                    updateImageCounter();
+                };
+                reader.onerror = function() {
+                    alert('Erreur lors du chargement de l\'image ' + file.name);
+                };
+                reader.readAsDataURL(file);
+            }
+            event.target.value = '';
+        }
+
+        // Mettre à jour l'affichage des images uploadées
+        function updateUploadedImagesDisplay() {
+            const container = document.getElementById('uploadedImages');
+            container.innerHTML = uploadedImages.map((image, index) => `
+                <div class="uploaded-image">
+                    <img src="${image}" alt="Image ${index + 1}">
+                    <button class="remove-image" onclick="removeImage(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Mettre à jour le compteur d'images
+        function updateImageCounter() {
+            const counter = document.getElementById('imageCounter');
+            if (counter) {
+                counter.textContent = uploadedImages.length;
+            }
+        }
+
+        // Supprimer une image
+        function removeImage(index) {
+            uploadedImages.splice(index, 1);
+            updateUploadedImagesDisplay();
+            updateImageCounter();
+        }
+
+        // FONCTION POUR VIDER LES IMAGES UPLOADÉES
+        function clearUploadedImages() {
+            uploadedImages = [];
+            updateUploadedImagesDisplay();
+            updateImageCounter();
+        }
+
+        // Inscription aux notifications
+        function subscribeToNotifications() {
+            const email = document.getElementById('subscriberEmail').value.trim();
+            const messageEl = document.getElementById('subscriptionMessage');
+            
+            if (!email || !validateEmail(email)) {
+                messageEl.textContent = 'Veuillez entrer une adresse email valide';
+                messageEl.style.color = '#e74c3c';
+                return;
+            }
+
+            if (!subscribers.includes(email)) {
+                subscribers.push(email);
+                localStorage.setItem('bahjatSubscribers', JSON.stringify(subscribers));
+                messageEl.textContent = 'Inscription réussie ! Vous recevrez des notifications pour les nouveaux parfums.';
+                messageEl.style.color = '#D4AF37';
+                document.getElementById('subscriberEmail').value = '';
+            } else {
+                messageEl.textContent = 'Cette adresse email est déjà inscrite.';
+                messageEl.style.color = '#A8A8A8';
+            }
+        }
+
+        // Validation email
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Envoyer les notifications
+        function sendNewPerfumeNotification(perfumeName) {
+            if (subscribers.length > 0) {
+                // Simuler l'envoi d'emails
+                console.log(`📧 Notification envoyée à ${subscribers.length} abonnés pour: ${perfumeName}`);
+                
+                // Afficher la bannière de notification
+                const banner = document.getElementById('notificationBanner');
+                banner.style.display = 'block';
+                setTimeout(() => {
+                    banner.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Créer un slider pour un parfum
+        function createSlider(perfume, containerId, isModal = false) {
+            const images = perfume.images && perfume.images.length > 0 ? perfume.images : [];
+            const slidesCount = Math.max(images.length, 1);
+            
+            let slidesHTML = '';
+            let dotsHTML = '';
+            
+            for (let i = 0; i < 5; i++) {
+                if (images[i]) {
+                    slidesHTML += `
+                        <div class="${isModal ? 'modal-slide' : 'slider-slide'}">
+                            <img src="${images[i]}" alt="${perfume.name}">
+                        </div>
+                    `;
+                } else {
+                    slidesHTML += `
+                        <div class="${isModal ? 'modal-slide' : 'slider-slide'}">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                    `;
+                }
+                
+                if (i < slidesCount) {
+                    dotsHTML += `<div class="${isModal ? 'modal-slider-dot' : 'slider-dot'} ${i === 0 ? 'active' : ''}" onclick="setSlide(${i}, '${containerId}', ${isModal})"></div>`;
+                }
+            }
+            
+            return { slidesHTML, dotsHTML, slidesCount };
+        }
+
+        // Changer de slide
+        function setSlide(index, containerId, isModal = false) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const transformValue = -index * 20 + '%';
+            container.style.transform = `translateX(${transformValue})`;
+            
+            const dots = document.querySelectorAll(isModal ? '.modal-slider-dot' : '.slider-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            
+            if (isModal) {
+                currentModalSlide = index;
+            }
+        }
+
+        // Changer de slide modal
+        function changeModalSlide(direction) {
+            const perfume = perfumes.find(p => p.id === window.currentModalPerfumeId);
+            if (!perfume) return;
+            
+            const slidesCount = Math.max(perfume.images.length, 1);
+            currentModalSlide = (currentModalSlide + direction + slidesCount) % slidesCount;
+            setSlide(currentModalSlide, 'modalSliderContainer', true);
+        }
+
+        // Ouvrir le modal détaillé
+        function openPerfumeModal(perfumeId) {
+            const perfume = perfumes.find(p => p.id === perfumeId);
+            if (perfume) {
+                window.currentModalPerfumeId = perfumeId;
+                currentModalSlide = 0;
+                
+                const slider = createSlider(perfume, 'modalSliderContainer', true);
+                document.getElementById('modalSliderContainer').innerHTML = slider.slidesHTML;
+                document.getElementById('modalSliderNav').innerHTML = slider.dotsHTML;
+                setSlide(0, 'modalSliderContainer', true);
+                
+                let priceHTML = '';
+                if (perfume.hasPromo && new Date(perfume.promoEndDate) > new Date()) {
+                    priceHTML = `
+                        <div class="modal-price">
+                            <span class="promo-price">${formatPrice(perfume.price)} €</span>
+                            <span class="current-price">${formatPrice(perfume.promoPrice)} €</span>
+                        </div>
+                    `;
+                } else {
+                    priceHTML = `<div class="modal-price">${formatPrice(perfume.price)} €</div>`;
+                }
+                
+                document.getElementById('modalInfo').innerHTML = `
+                    <h2 class="modal-name">${perfume.name}</h2>
+                    ${priceHTML}
+                    <div class="modal-details">
+                        <div class="modal-detail">
+                            <i class="fas fa-tag"></i>
+                            <span><strong>Marque:</strong> ${perfume.brand}</span>
+                        </div>
+                        <div class="modal-detail">
+                            <i class="fas fa-flask"></i>
+                            <span><strong>Volume:</strong> ${perfume.size}</span>
+                        </div>
+                        <div class="modal-detail">
+                            <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
+                            <span><strong>Genre:</strong> ${perfume.gender}</span>
+                        </div>
+                    </div>
+                    <div class="modal-notes">
+                        <div class="notes-title">Composition Olfactive</div>
+                        <div class="notes-grid">
+                            ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('perfumeModal').classList.add('active');
+            }
+        }
+
+        // Fermer le modal
+        function closeModal() {
+            document.getElementById('perfumeModal').classList.remove('active');
+        }
+
+        // Rendu pour les clients
+        function renderClientPerfumes() {
+            const grid = document.getElementById('clientPerfumeGrid');
+            
+            if (perfumes.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-wind"></i>
+                        <h3>Collection en Préparation</h3>
+                        <p>Notre collection de parfums exclusifs arrive bientôt...</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = perfumes.map(perfume => {
+                const slider = createSlider(perfume, `slider-${perfume.id}`);
+                const hasActivePromo = perfume.hasPromo && new Date(perfume.promoEndDate) > new Date();
+                
+                let priceHTML = '';
+                if (hasActivePromo) {
+                    priceHTML = `
+                        <div class="perfume-price">
+                            <span class="promo-price">${formatPrice(perfume.price)}</span>
+                            <span class="current-price">${formatPrice(perfume.promoPrice)}</span>
+                            <span class="price-currency">EUR</span>
+                        </div>
+                    `;
+                } else {
+                    priceHTML = `
+                        <div class="perfume-price">
+                            ${formatPrice(perfume.price)}
+                            <span class="price-currency">EUR</span>
+                        </div>
+                    `;
+                }
+                
+                return `
+                <div class="perfume-card" onclick="openPerfumeModal(${perfume.id})">
+                    ${hasActivePromo ? '<div class="promo-badge">PROMO</div>' : ''}
+                    <div class="perfume-slider">
+                        <div class="slider-container" id="slider-${perfume.id}">
+                            ${slider.slidesHTML}
+                        </div>
+                        <button class="slider-arrow prev" onclick="event.stopPropagation(); setSlide((currentSlide - 1 + ${slider.slidesCount}) % ${slider.slidesCount}, 'slider-${perfume.id}')">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="slider-arrow next" onclick="event.stopPropagation(); setSlide((currentSlide + 1) % ${slider.slidesCount}, 'slider-${perfume.id}')">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="slider-nav">
+                            ${slider.dotsHTML}
+                        </div>
+                    </div>
+                    <div class="perfume-info">
+                        <h3 class="perfume-name">${perfume.name}</h3>
+                        ${priceHTML}
+                        <div class="perfume-details">
+                            <div class="perfume-detail">
+                                <i class="fas fa-tag"></i>
+                                <span>${perfume.brand}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-flask"></i>
+                                <span>${perfume.size}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
+                                <span>${perfume.gender}</span>
+                            </div>
+                        </div>
+                        <div class="perfume-notes">
+                            <div class="notes-title">Composition</div>
+                            <div class="notes-grid">
+                                ${perfume.notes.slice(0, 4).map(note => `<span class="note-tag">${note}</span>`).join('')}
+                                ${perfume.notes.length > 4 ? `<span class="note-tag">+${perfume.notes.length - 4} autres</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        // Rendu pour l'admin
+        function renderAdminPerfumes() {
+            const grid = document.getElementById('adminPerfumeGrid');
+            
+            if (perfumes.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><i class="fas fa-wind"></i><h3>Aucun parfum dans la collection</h3></div>';
+                return;
+            }
+            
+            grid.innerHTML = perfumes.map(perfume => {
+                const slider = createSlider(perfume, `admin-slider-${perfume.id}`);
+                const hasActivePromo = perfume.hasPromo && new Date(perfume.promoEndDate) > new Date();
+                
+                let priceHTML = '';
+                if (hasActivePromo) {
+                    priceHTML = `
+                        <div class="perfume-price">
+                            <span class="promo-price">${formatPrice(perfume.price)}</span>
+                            <span class="current-price">${formatPrice(perfume.promoPrice)}</span>
+                            <span class="price-currency">EUR</span>
+                        </div>
+                    `;
+                } else {
+                    priceHTML = `
+                        <div class="perfume-price">
+                            ${formatPrice(perfume.price)}
+                            <span class="price-currency">EUR</span>
+                        </div>
+                    `;
+                }
+                
+                return `
+                <div class="perfume-card">
+                    ${hasActivePromo ? '<div class="promo-badge">PROMO</div>' : ''}
+                    <div class="perfume-slider">
+                        <div class="slider-container" id="admin-slider-${perfume.id}">
+                            ${slider.slidesHTML}
+                        </div>
+                        <button class="slider-arrow prev" onclick="event.stopPropagation(); setSlide((currentSlide - 1 + ${slider.slidesCount}) % ${slider.slidesCount}, 'admin-slider-${perfume.id}')">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="slider-arrow next" onclick="event.stopPropagation(); setSlide((currentSlide + 1) % ${slider.slidesCount}, 'admin-slider-${perfume.id}')">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="slider-nav">
+                            ${slider.dotsHTML}
+                        </div>
+                    </div>
+                    <div class="perfume-info">
+                        <h3 class="perfume-name">${perfume.name}</h3>
+                        ${priceHTML}
+                        <div class="perfume-details">
+                            <div class="perfume-detail">
+                                <i class="fas fa-tag"></i>
+                                <span>${perfume.brand}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-flask"></i>
+                                <span>${perfume.size}</span>
+                            </div>
+                            <div class="perfume-detail">
+                                <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
+                                <span>${perfume.gender}</span>
+                            </div>
+                        </div>
+                        <div class="perfume-notes">
+                            <div class="notes-title">Notes</div>
+                            <div class="notes-grid">
+                                ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="action-btn edit" onclick="editPerfume(${perfume.id})">
+                                <i class="fas fa-edit"></i> Modifier
+                            </button>
+                            <button class="action-btn delete" onclick="deletePerfume(${perfume.id})">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        // CORRECTION POUR L'AJOUT/MODIFICATION AVEC IMAGES
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            if (!isAdminAuthenticated) {
+                alert('Accès non autorisé');
+                return;
+            }
+            
+            const isNewPerfume = !editingId;
+            const perfumeData = {
+                name: document.getElementById('perfumeName').value.trim(),
+                brand: document.getElementById('perfumeBrand').value.trim(),
+                size: document.getElementById('perfumeSize').value.trim(),
+                gender: document.getElementById('perfumeGender').value,
+                price: parseFloat(document.getElementById('perfumePrice').value),
+                hasPromo: document.getElementById('hasPromo').checked,
+                promoPrice: document.getElementById('hasPromo').checked ? parseFloat(document.getElementById('promoPrice').value) : 0,
+                promoEndDate: document.getElementById('hasPromo').checked ? document.getElementById('promoEndDate').value : '',
+                images: [...uploadedImages], // IMPORTANT: Copie du tableau des images
+                notes: document.getElementById('perfumeNotes').value.split(',').map(note => note.trim()).filter(note => note !== '')
+            };
+            
+            // Validation des données
+            if (!perfumeData.name || !perfumeData.brand || !perfumeData.size || !perfumeData.gender || isNaN(perfumeData.price)) {
+                alert('Veuillez remplir tous les champs obligatoires correctement');
+                return;
+            }
+            
+            if (perfumeData.hasPromo && (isNaN(perfumeData.promoPrice) || perfumeData.promoPrice <= 0)) {
+                alert('Veuillez entrer un prix promo valide');
+                return;
+            }
+            
+            if (editingId) {
+                updatePerfume(editingId, perfumeData);
+            } else {
+                addPerfume(perfumeData);
+                if (isNewPerfume) {
+                    sendNewPerfumeNotification(perfumeData.name);
+                }
+            }
+            
+            resetForm();
+            renderClientPerfumes();
+            renderAdminPerfumes();
+        }
+
+        function addPerfume(perfumeData) {
+            const newPerfume = {
+                id: Date.now(),
+                ...perfumeData
+            };
+            perfumes.push(newPerfume);
+            savePerfumes();
+            alert('Parfum ajouté avec succès ! Les abonnés ont été notifiés.');
+        }
+
+        function updatePerfume(id, perfumeData) {
+            const index = perfumes.findIndex(p => p.id === id);
+            if (index !== -1) {
+                perfumes[index] = { id, ...perfumeData };
+                savePerfumes();
+                alert('Parfum modifié avec succès !');
+            }
+        }
+
+        function deletePerfume(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce parfum ?')) {
+                perfumes = perfumes.filter(p => p.id !== id);
+                savePerfumes();
+                renderClientPerfumes();
+                renderAdminPerfumes();
+                if (editingId === id) resetForm();
+            }
+        }
+
+        // CORRECTION POUR L'ÉDITION AVEC IMAGES
+        function editPerfume(id) {
+            if (!isAdminAuthenticated) {
+                alert('Accès non autorisé');
+                return;
+            }
+            
+            const perfume = perfumes.find(p => p.id === id);
+            if (perfume) {
+                document.getElementById('perfumeId').value = perfume.id;
+                document.getElementById('perfumeName').value = perfume.name;
+                document.getElementById('perfumeBrand').value = perfume.brand;
+                document.getElementById('perfumeSize').value = perfume.size;
+                document.getElementById('perfumeGender').value = perfume.gender;
+                document.getElementById('perfumePrice').value = perfume.price;
+                document.getElementById('perfumeNotes').value = perfume.notes.join(', ');
+                document.getElementById('hasPromo').checked = perfume.hasPromo;
+                document.getElementById('promoPrice').value = perfume.promoPrice || '';
+                document.getElementById('promoEndDate').value = perfume.promoEndDate || '';
+                
+                // RÉINITIALISATION CORRECTE DES IMAGES
+                uploadedImages = [...perfume.images]; // Copie du tableau
+                updateUploadedImagesDisplay();
+                updateImageCounter();
+                togglePromoFields();
+                
+                editingId = id;
+                
+                document.getElementById('perfumeForm').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // CORRECTION POUR LA RÉINITIALISATION DU FORMULAIRE
+        function resetForm() {
+            document.getElementById('perfumeForm').reset();
+            document.getElementById('perfumeId').value = '';
+            document.getElementById('hasPromo').checked = false;
+            togglePromoFields();
+            uploadedImages = []; // Réinitialisation correcte
+            updateUploadedImagesDisplay();
+            updateImageCounter();
+            editingId = null;
+        }
+
+        function getGenderIcon(gender) {
+            switch(gender) {
+                case 'Féminin': return 'venus';
+                case 'Masculin': return 'mars';
+                default: return 'neuter';
+            }
+        }
+
+        // Variables globales pour les sliders
+        let currentSlide = 0;
+
+        // Rendre les fonctions accessibles globalement
+        window.showClientAccess = showClientAccess;
+        window.showAdminAccess = showAdminAccess;
+        window.editPerfume = editPerfume;
+        window.deletePerfume = deletePerfume;
+        window.openPerfumeModal = openPerfumeModal;
+        window.closeModal = closeModal;
+        window.resetForm = resetForm;
+        window.setSlide = setSlide;
+        window.changeModalSlide = changeModalSlide;
+        window.currentSlide = currentSlide;
+        window.handleImageUpload = handleImageUpload;
+        window.removeImage = removeImage;
+        window.subscribeToNotifications = subscribeToNotifications;
+        window.togglePromoFields = togglePromoFields;
+        window.checkAdminPassword = checkAdminPassword;
+        window.closeSecurity = closeSecurity;
+        window.clearUploadedImages = clearUploadedImages;
+    </script>
+</body>
+</html>
