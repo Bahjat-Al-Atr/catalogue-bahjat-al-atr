@@ -55,7 +55,6 @@
             z-index: 1;
         }
 
-        /* Header Style */
         .luxury-header {
             text-align: center;
             padding: 80px 0 60px 0;
@@ -96,7 +95,6 @@
             margin-top: 40px;
         }
 
-        /* Boutons luxueux */
         .luxury-btn {
             background: linear-gradient(135deg, var(--accent-gold), var(--dark-gold));
             color: var(--primary-dark);
@@ -146,7 +144,6 @@
             color: var(--primary-dark);
         }
 
-        /* Protection sécurité */
         .security-overlay {
             display: none;
             position: fixed;
@@ -382,7 +379,6 @@
             transform: scaleX(1);
         }
 
-        /* CORRECTIONS POUR LES SLIDERS D'IMAGES */
         .perfume-slider {
             height: 400px;
             position: relative;
@@ -552,7 +548,6 @@
             transform: translateY(-2px);
         }
 
-        /* Modal détaillé */
         .perfume-modal {
             display: none;
             position: fixed;
@@ -737,7 +732,6 @@
             margin-top: 25px;
         }
 
-        /* Formulaire admin */
         .admin-form {
             padding: 50px;
             border-bottom: 1px solid rgba(212, 175, 55, 0.3);
@@ -816,7 +810,6 @@
             margin-top: 40px;
         }
 
-        /* Actions admin sur les cartes */
         .admin-actions {
             display: flex;
             gap: 12px;
@@ -854,7 +847,6 @@
             color: #e74c3c;
         }
 
-        /* Footer */
         .luxury-footer {
             text-align: center;
             padding: 80px 0;
@@ -892,7 +884,6 @@
             transform: translateY(-2px);
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .brand-title {
                 font-size: 2.8rem;
@@ -949,7 +940,6 @@
             }
         }
 
-        /* État vide */
         .empty-state {
             text-align: center;
             padding: 100px 20px;
@@ -966,7 +956,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Protection de sécurité -->
     <div class="security-overlay" id="securityOverlay">
         <div class="security-modal">
             <h2 style="color: var(--accent-gold); margin-bottom: 20px; font-size: 2rem;">
@@ -990,12 +979,10 @@
     <div class="luxury-bg"></div>
     
     <div class="container">
-        <!-- Bannière de notification -->
         <div class="notification-banner" id="notificationBanner" style="display: none;">
             <i class="fas fa-bell"></i> Nouveau parfum ajouté à la collection !
         </div>
 
-        <!-- Section d'inscription aux notifications -->
         <div class="subscription-section">
             <h3 style="color: var(--light-gold); margin-bottom: 15px; font-size: 1.5rem;">Ne manquez aucun nouveau parfum</h3>
             <p style="color: var(--text-gray); margin-bottom: 20px;">Inscrivez-vous pour recevoir une notification dès qu'un nouveau parfum est ajouté</p>
@@ -1008,7 +995,6 @@
             <p id="subscriptionMessage" style="margin-top: 15px; color: var(--text-gray); font-size: 0.9rem;"></p>
         </div>
 
-        <!-- En-tête principal -->
         <div class="luxury-header">
             <h1 class="brand-title">BAHJAT AL ATR</h1>
             <div class="gold-bar"></div>
@@ -1024,7 +1010,6 @@
             </div>
         </div>
 
-        <!-- Panneau Client -->
         <div class="access-panel active" id="clientPanel">
             <h2 class="panel-title">Collection Signature</h2>
             <div class="perfume-grid" id="clientPerfumeGrid">
@@ -1032,7 +1017,6 @@
             </div>
         </div>
 
-        <!-- Panneau Admin -->
         <div class="access-panel" id="adminPanel">
             <h2 class="panel-title">Gestion de la Collection</h2>
             
@@ -1106,7 +1090,6 @@
                         </div>
                     </div>
 
-                    <!-- SECTION IMAGES CORRIGÉE -->
                     <div class="form-group image-upload-container">
                         <label class="form-label">Images du Parfum</label>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -1145,7 +1128,6 @@
             </div>
         </div>
 
-        <!-- Modal détaillé -->
         <div class="perfume-modal" id="perfumeModal">
             <div class="modal-content">
                 <button class="modal-close" onclick="closeModal()">
@@ -1171,7 +1153,6 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <div class="luxury-footer">
             <p class="footer-quote">"Quand l'élégance du parfum prend tout son sens"</p>
             <a href="https://linktr.ee/bahjatalatr?utm_source=linktree_profile_share&ltsid=d14ad074-6f51-4fd6-b9d8-c24a648e7166" 
@@ -1184,18 +1165,17 @@
     </div>
 
     <script>
-        // MOT DE PASSE ADMIN SÉCURISÉ
+        // MOT DE PASSE ADMIN
         const ADMIN_PASSWORD = "doHBDposcqksjnPibizabcqksjncsqiuPBDAP0827190I2`*¨M*%+*+¨1I820JANDPQPDCBZEPIUBZpdDJBEDÊZBFDBDOBDEOZBÇÉ! ÉÇÇ I&)IE&)E&ÊÙ&MEAÙZD:AÙ`:ù;^m;l,ùpdfnzqeâeàfçhHJ »À^ÇÉU')TÇUÉ$)ÀEjfà^f,FZ,Z,";
         let isAdminAuthenticated = false;
 
-        // Variables globales
         let perfumes = [];
         let editingId = null;
         let currentModalSlide = 0;
         let uploadedImages = [];
         let subscribers = JSON.parse(localStorage.getItem('bahjatSubscribers')) || [];
 
-        // CORRECTION: Fonction pour compresser les images
+        // FONCTION DE COMPRESSION D'IMAGES
         function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
             return new Promise((resolve, reject) => {
                 const canvas = document.createElement('canvas');
@@ -1206,7 +1186,6 @@
                     let width = img.width;
                     let height = img.height;
 
-                    // Redimensionner si nécessaire
                     if (width > maxWidth) {
                         height = (height * maxWidth) / width;
                         width = maxWidth;
@@ -1218,10 +1197,8 @@
 
                     canvas.width = width;
                     canvas.height = height;
-
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    // Convertir en base64 avec compression
                     const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
                     resolve(compressedDataUrl);
                 };
@@ -1231,7 +1208,7 @@
             });
         }
 
-        // CORRECTION: Gestion de l'upload avec compression
+        // UPLOAD D'IMAGES AVEC COMPRESSION
         async function handleImageUpload(event) {
             const files = event.target.files;
             const maxFiles = 5;
@@ -1248,7 +1225,6 @@
                 }
                 
                 try {
-                    // Compresser l'image avant de l'ajouter
                     const compressedImage = await compressImage(file);
                     uploadedImages.push(compressedImage);
                     updateUploadedImagesDisplay();
@@ -1261,15 +1237,13 @@
             event.target.value = '';
         }
 
-        // Initialisation
+        // INITIALISATION
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Initialisation du catalogue...');
             loadPerfumes();
             setupEventListeners();
             updateImageCounter();
         });
 
-        // Configuration des écouteurs d'événements
         function setupEventListeners() {
             const form = document.getElementById('perfumeForm');
             if (form) {
@@ -1277,13 +1251,9 @@
                     e.preventDefault();
                     handleFormSubmit(e);
                 });
-                console.log('Événement submit attaché au formulaire');
-            } else {
-                console.error('Formulaire non trouvé');
             }
         }
 
-        // Vérification du mot de passe admin
         function checkAdminPassword() {
             const password = document.getElementById('adminPassword').value;
             if (password === ADMIN_PASSWORD) {
@@ -1293,7 +1263,6 @@
                 document.getElementById('clientPanel').classList.remove('active');
                 renderAdminPerfumes();
                 document.getElementById('adminPassword').value = '';
-                console.log('Accès admin autorisé');
             } else {
                 alert('Mot de passe incorrect');
                 document.getElementById('adminPassword').value = '';
@@ -1306,48 +1275,26 @@
             document.getElementById('adminPassword').value = '';
         }
 
-        // Charger les parfums
         function loadPerfumes() {
             const storedPerfumes = localStorage.getItem('bahjatAlAtrPerfumes');
             if (storedPerfumes) {
                 perfumes = JSON.parse(storedPerfumes);
-                console.log('Parfums chargés depuis le localStorage:', perfumes.length);
             } else {
-                // Données initiales si aucun parfum n'est sauvegardé
-                perfumes = [
-                    {
-                        id: 1,
-                        name: "Khamrah Dukhan",
-                        brand: "Lattafa",
-                        size: "100ml",
-                        gender: "Unisexe",
-                        price: 89.90,
-                        hasPromo: false,
-                        promoPrice: 0,
-                        promoEndDate: "",
-                        images: [],
-                        notes: ["Piment", "Mandarine", "Incense", "Ciste", "Patchouli", "Fleurs d'oranger", "Tabac", "Praline", "Ambre", "Fèves de tonkas", "Bensoide"]
-                    }
-                ];
-                savePerfumes();
+                perfumes = [];
             }
             renderClientPerfumes();
         }
 
-        // Sauvegarder les parfums
         function savePerfumes() {
             localStorage.setItem('bahjatAlAtrPerfumes', JSON.stringify(perfumes));
-            console.log('Parfums sauvegardés:', perfumes);
         }
 
-        // Afficher l'accès client
         function showClientAccess() {
             document.getElementById('clientPanel').classList.add('active');
             document.getElementById('adminPanel').classList.remove('active');
             renderClientPerfumes();
         }
 
-        // Afficher l'accès admin
         function showAdminAccess() {
             if (!isAdminAuthenticated) {
                 document.getElementById('securityOverlay').style.display = 'flex';
@@ -1359,7 +1306,6 @@
             }
         }
 
-        // Formatage du prix
         function formatPrice(price) {
             return new Intl.NumberFormat('fr-FR', {
                 minimumFractionDigits: 2,
@@ -1367,14 +1313,12 @@
             }).format(price);
         }
 
-        // Toggle des champs promo
         function togglePromoFields() {
             const promoFields = document.getElementById('promoFields');
             const hasPromo = document.getElementById('hasPromo').checked;
             promoFields.style.display = hasPromo ? 'block' : 'none';
         }
 
-        // Mettre à jour l'affichage des images uploadées
         function updateUploadedImagesDisplay() {
             const container = document.getElementById('uploadedImages');
             if (container) {
@@ -1389,7 +1333,6 @@
             }
         }
 
-        // Mettre à jour le compteur d'images
         function updateImageCounter() {
             const counter = document.getElementById('imageCounter');
             if (counter) {
@@ -1397,14 +1340,12 @@
             }
         }
 
-        // Supprimer une image
         function removeImage(index) {
             uploadedImages.splice(index, 1);
             updateUploadedImagesDisplay();
             updateImageCounter();
         }
 
-        // Vider les images uploadées
         function clearUploadedImages() {
             if (uploadedImages.length > 0 && confirm('Voulez-vous vraiment supprimer toutes les images ?')) {
                 uploadedImages = [];
@@ -1413,16 +1354,13 @@
             }
         }
 
-        // Gestion du formulaire
+        // GESTION DU FORMULAIRE - CORRECTION CRITIQUE
         function handleFormSubmit(e) {
-            console.log('Début de handleFormSubmit');
-            
             if (!isAdminAuthenticated) {
                 alert('Accès non autorisé. Veuillez vous connecter en tant qu\'administrateur.');
                 return;
             }
             
-            // Récupération des valeurs du formulaire
             const perfumeData = {
                 name: document.getElementById('perfumeName').value.trim(),
                 brand: document.getElementById('perfumeBrand').value.trim(),
@@ -1432,13 +1370,11 @@
                 hasPromo: document.getElementById('hasPromo').checked,
                 promoPrice: document.getElementById('hasPromo').checked ? parseFloat(document.getElementById('promoPrice').value) : 0,
                 promoEndDate: document.getElementById('hasPromo').checked ? document.getElementById('promoEndDate').value : '',
-                images: [...uploadedImages],
+                images: [...uploadedImages], // CORRECTION: Copie directe du tableau
                 notes: document.getElementById('perfumeNotes').value.split(',').map(note => note.trim()).filter(note => note !== '')
             };
 
-            console.log('Données du formulaire:', perfumeData);
-
-            // Validation des données
+            // VALIDATION
             if (!perfumeData.name) {
                 alert('Veuillez entrer un nom de parfum');
                 document.getElementById('perfumeName').focus();
@@ -1483,10 +1419,8 @@
 
             try {
                 if (editingId) {
-                    // Modification d'un parfum existant
                     updatePerfume(editingId, perfumeData);
                 } else {
-                    // Ajout d'un nouveau parfum
                     addPerfume(perfumeData);
                 }
                 
@@ -1508,19 +1442,17 @@
             perfumes.push(newPerfume);
             savePerfumes();
             alert('Parfum ajouté avec succès !');
-            console.log('Nouveau parfum ajouté:', newPerfume);
         }
 
         function updatePerfume(id, perfumeData) {
             const index = perfumes.findIndex(p => p.id === id);
             if (index !== -1) {
                 perfumes[index] = { 
-                    id: id, // Garder l'ID original
+                    id: id,
                     ...perfumeData 
                 };
                 savePerfumes();
                 alert('Parfum modifié avec succès !');
-                console.log('Parfum modifié:', perfumes[index]);
             } else {
                 throw new Error('Parfum non trouvé');
             }
@@ -1575,80 +1507,9 @@
             updateUploadedImagesDisplay();
             updateImageCounter();
             editingId = null;
-            console.log('Formulaire réinitialisé');
         }
 
-        // Fonctions pour le modal
-        function openPerfumeModal(perfumeId) {
-            const perfume = perfumes.find(p => p.id === perfumeId);
-            if (perfume) {
-                window.currentModalPerfumeId = perfumeId;
-                currentModalSlide = 0;
-                
-                // Créer le slider modal
-                const sliderHTML = createSliderHTML(perfume).replace(/slider-slide/g, 'modal-slide');
-                document.getElementById('modalSliderContainer').innerHTML = sliderHTML;
-                
-                // Créer les dots de navigation
-                const dotsHTML = createSliderDots(perfume).replace(/slider-dot/g, 'modal-slider-dot');
-                document.getElementById('modalSliderNav').innerHTML = dotsHTML;
-                
-                setSlide(perfumeId, 0, true);
-                
-                let priceHTML = '';
-                if (perfume.hasPromo && new Date(perfume.promoEndDate) > new Date()) {
-                    priceHTML = `
-                        <div class="modal-price">
-                            <span class="promo-price">${formatPrice(perfume.price)} €</span>
-                            <span class="current-price">${formatPrice(perfume.promoPrice)} €</span>
-                        </div>
-                    `;
-                } else {
-                    priceHTML = `<div class="modal-price">${formatPrice(perfume.price)} €</div>`;
-                }
-                
-                document.getElementById('modalInfo').innerHTML = `
-                    <h2 class="modal-name">${perfume.name}</h2>
-                    ${priceHTML}
-                    <div class="modal-details">
-                        <div class="modal-detail">
-                            <i class="fas fa-tag"></i>
-                            <span><strong>Marque:</strong> ${perfume.brand}</span>
-                        </div>
-                        <div class="modal-detail">
-                            <i class="fas fa-flask"></i>
-                            <span><strong>Volume:</strong> ${perfume.size}</span>
-                        </div>
-                        <div class="modal-detail">
-                            <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
-                            <span><strong>Genre:</strong> ${perfume.gender}</span>
-                        </div>
-                    </div>
-                    <div class="modal-notes">
-                        <div class="notes-title">Composition Olfactive</div>
-                        <div class="notes-grid">
-                            ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
-                document.getElementById('perfumeModal').classList.add('active');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('perfumeModal').classList.remove('active');
-        }
-
-        function changeModalSlide(direction) {
-            const perfume = perfumes.find(p => p.id === window.currentModalPerfumeId);
-            if (!perfume) return;
-            
-            const slidesCount = Math.max(perfume.images.length, 1);
-            currentModalSlide = (currentModalSlide + direction + slidesCount) % slidesCount;
-            setSlide(window.currentModalPerfumeId, currentModalSlide, true);
-        }
-
-        // Reste des fonctions de rendu
+        // FONCTIONS D'AFFICHAGE DES PARFUMS
         function renderClientPerfumes() {
             const grid = document.getElementById('clientPerfumeGrid');
             if (!grid) return;
@@ -1858,7 +1719,6 @@
             const newX = (currentX - direction * 20 + 100) % 100;
             container.style.transform = `translateX(${newX}%)`;
             
-            // Mettre à jour les dots
             const slideIndex = Math.abs(newX / 20);
             const perfumeId = sliderId.replace('slider-', '').replace('admin-slider-', '');
             const dots = document.querySelectorAll(`#nav-${perfumeId} .slider-dot, #admin-nav-${perfumeId} .slider-dot`);
@@ -1877,7 +1737,6 @@
             const transformValue = -index * 20 + '%';
             container.style.transform = `translateX(${transformValue})`;
             
-            // Mettre à jour les dots
             const dots = isModal ?
                 document.querySelectorAll('#modalSliderNav .modal-slider-dot') :
                 document.querySelectorAll(`#nav-${perfumeId} .slider-dot, #admin-nav-${perfumeId} .slider-dot`);
@@ -1891,6 +1750,73 @@
             }
         }
 
+        function openPerfumeModal(perfumeId) {
+            const perfume = perfumes.find(p => p.id === perfumeId);
+            if (perfume) {
+                window.currentModalPerfumeId = perfumeId;
+                currentModalSlide = 0;
+                
+                const sliderHTML = createSliderHTML(perfume).replace(/slider-slide/g, 'modal-slide');
+                document.getElementById('modalSliderContainer').innerHTML = sliderHTML;
+                
+                const dotsHTML = createSliderDots(perfume).replace(/slider-dot/g, 'modal-slider-dot');
+                document.getElementById('modalSliderNav').innerHTML = dotsHTML;
+                
+                setSlide(perfumeId, 0, true);
+                
+                let priceHTML = '';
+                if (perfume.hasPromo && new Date(perfume.promoEndDate) > new Date()) {
+                    priceHTML = `
+                        <div class="modal-price">
+                            <span class="promo-price">${formatPrice(perfume.price)} €</span>
+                            <span class="current-price">${formatPrice(perfume.promoPrice)} €</span>
+                        </div>
+                    `;
+                } else {
+                    priceHTML = `<div class="modal-price">${formatPrice(perfume.price)} €</div>`;
+                }
+                
+                document.getElementById('modalInfo').innerHTML = `
+                    <h2 class="modal-name">${perfume.name}</h2>
+                    ${priceHTML}
+                    <div class="modal-details">
+                        <div class="modal-detail">
+                            <i class="fas fa-tag"></i>
+                            <span><strong>Marque:</strong> ${perfume.brand}</span>
+                        </div>
+                        <div class="modal-detail">
+                            <i class="fas fa-flask"></i>
+                            <span><strong>Volume:</strong> ${perfume.size}</span>
+                        </div>
+                        <div class="modal-detail">
+                            <i class="fas fa-${getGenderIcon(perfume.gender)}"></i>
+                            <span><strong>Genre:</strong> ${perfume.gender}</span>
+                        </div>
+                    </div>
+                    <div class="modal-notes">
+                        <div class="notes-title">Composition Olfactive</div>
+                        <div class="notes-grid">
+                            ${perfume.notes.map(note => `<span class="note-tag">${note}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('perfumeModal').classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('perfumeModal').classList.remove('active');
+        }
+
+        function changeModalSlide(direction) {
+            const perfume = perfumes.find(p => p.id === window.currentModalPerfumeId);
+            if (!perfume) return;
+            
+            const slidesCount = Math.max(perfume.images.length, 1);
+            currentModalSlide = (currentModalSlide + direction + slidesCount) % slidesCount;
+            setSlide(window.currentModalPerfumeId, currentModalSlide, true);
+        }
+
         function getGenderIcon(gender) {
             switch(gender) {
                 case 'Féminin': return 'venus';
@@ -1899,7 +1825,6 @@
             }
         }
 
-        // Inscription aux notifications
         function subscribeToNotifications() {
             const email = document.getElementById('subscriberEmail').value.trim();
             const messageEl = document.getElementById('subscriptionMessage');
@@ -1927,7 +1852,7 @@
             return re.test(email);
         }
 
-        // Rendre les fonctions accessibles globalement
+        // FONCTIONS GLOBALES
         window.showClientAccess = showClientAccess;
         window.showAdminAccess = showAdminAccess;
         window.editPerfume = editPerfume;
