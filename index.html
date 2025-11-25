@@ -223,19 +223,33 @@
             transform: scaleX(1);
         }
 
-        .perfume-image {
+        /* Slider d'images */
+        .perfume-slider {
             height: 220px;
+            position: relative;
+            overflow: hidden;
             background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+        }
+
+        .slider-container {
+            display: flex;
+            width: 500%;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .slider-slide {
+            width: 20%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--accent-gold);
             font-size: 3.5rem;
             position: relative;
-            overflow: hidden;
         }
 
-        .perfume-image::after {
+        .slider-slide::after {
             content: '';
             position: absolute;
             top: 0;
@@ -243,12 +257,61 @@
             right: 0;
             bottom: 0;
             background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.1) 50%, transparent 70%);
-            animation: shimmer 3s infinite;
         }
 
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        .slider-nav {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background: var(--accent-gold);
+            transform: scale(1.2);
+        }
+
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: var(--accent-gold);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .slider-arrow:hover {
+            background: rgba(212, 175, 55, 0.3);
+        }
+
+        .slider-arrow.prev {
+            left: 15px;
+        }
+
+        .slider-arrow.next {
+            right: 15px;
         }
 
         .perfume-info {
@@ -385,13 +448,94 @@
             color: var(--accent-gold);
         }
 
-        .modal-image {
+        .modal-slider {
+            height: 100%;
+            position: relative;
+            overflow: hidden;
             background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+        }
+
+        .modal-slider-container {
+            display: flex;
+            width: 500%;
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .modal-slide {
+            width: 20%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--accent-gold);
             font-size: 5rem;
+            position: relative;
+        }
+
+        .modal-slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.1) 50%, transparent 70%);
+        }
+
+        .modal-slider-nav {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .modal-slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-slider-dot.active {
+            background: var(--accent-gold);
+            transform: scale(1.3);
+        }
+
+        .modal-slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: var(--accent-gold);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .modal-slider-arrow:hover {
+            background: rgba(212, 175, 55, 0.4);
+        }
+
+        .modal-slider-arrow.prev {
+            left: 20px;
+        }
+
+        .modal-slider-arrow.next {
+            right: 20px;
         }
 
         .modal-info {
@@ -493,6 +637,10 @@
 
         .price-input {
             padding-left: 35px !important;
+        }
+
+        .image-urls-input {
+            grid-column: 1 / -1;
         }
 
         .form-actions {
@@ -617,8 +765,8 @@
                 overflow-y: auto;
             }
 
-            .modal-image {
-                height: 250px;
+            .modal-slider {
+                height: 300px;
             }
 
             .modal-info {
@@ -721,6 +869,14 @@
                             <input type="text" class="form-input" id="perfumeNotes" placeholder="Vanille, Ambre, Patchouli..." required>
                         </div>
                     </div>
+
+                    <div class="form-group image-urls-input">
+                        <label class="form-label">URLs des Images (5 maximum, séparées par des virgules)</label>
+                        <textarea class="form-input" id="perfumeImages" placeholder="https://image1.jpg, https://image2.jpg, https://image3.jpg..." rows="3"></textarea>
+                        <small style="color: var(--text-gray); margin-top: 5px; display: block;">
+                            Laissez vide pour utiliser l'image par défaut
+                        </small>
+                    </div>
                     
                     <div class="form-actions">
                         <button type="submit" class="luxury-btn" id="savePerfume">
@@ -744,8 +900,19 @@
                 <button class="modal-close" onclick="closeModal()">
                     <i class="fas fa-times"></i>
                 </button>
-                <div class="modal-image" id="modalImage">
-                    <i class="fas fa-gem"></i>
+                <div class="modal-slider" id="modalSlider">
+                    <div class="modal-slider-container" id="modalSliderContainer">
+                        <!-- Slides chargées dynamiquement -->
+                    </div>
+                    <button class="modal-slider-arrow prev" onclick="changeModalSlide(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="modal-slider-arrow next" onclick="changeModalSlide(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="modal-slider-nav" id="modalSliderNav">
+                        <!-- Points de navigation chargés dynamiquement -->
+                    </div>
                 </div>
                 <div class="modal-info" id="modalInfo">
                     <!-- Contenu chargé dynamiquement -->
@@ -766,7 +933,7 @@
     </div>
 
     <script>
-        // Données initiales avec prix
+        // Données initiales avec images
         const initialPerfumes = [
             {
                 id: 1,
@@ -775,6 +942,7 @@
                 size: "100ml",
                 gender: "Unisexe",
                 price: 89.90,
+                images: [],
                 notes: ["Piment", "Mandarine", "Incense", "Ciste", "Patchouli", "Fleurs d'oranger", "Tabac", "Praline", "Ambre", "Fèves de tonkas", "Bensoide"]
             },
             {
@@ -784,6 +952,7 @@
                 size: "80ml",
                 gender: "Unisexe",
                 price: 79.90,
+                images: [],
                 notes: ["Pistaches", "Amandes", "Crème fouettée", "Héliotrope", "Musc", "Bois de santal"]
             },
             {
@@ -793,6 +962,7 @@
                 size: "100ml / 35ml",
                 gender: "Féminin",
                 price: 69.90,
+                images: [],
                 notes: ["Mandarine", "Poire", "Orchidée", "Vanille", "Bois de santale", "Musc", "Héliotrope", "Bergamote"]
             },
             {
@@ -802,6 +972,7 @@
                 size: "100ml",
                 gender: "Féminin",
                 price: 65.90,
+                images: [],
                 notes: ["Jasmin", "Pêche", "Ambre", "Caramel", "Bois de santal", "Patchouli"]
             },
             {
@@ -811,6 +982,7 @@
                 size: "100ml",
                 gender: "Masculin",
                 price: 74.90,
+                images: [],
                 notes: ["Ananas", "Tabac", "Poivre noir", "Vanille", "Café", "Patchouli", "Ambre", "Benjoin", "Bois", "Labdanum"]
             },
             {
@@ -820,6 +992,7 @@
                 size: "50ml",
                 gender: "Féminin",
                 price: 59.90,
+                images: [],
                 notes: ["Pamplemousse", "Orange", "Jasmin", "Muse Blanc", "Ambre", "Bois de santal", "Vanille", "Fèves de Tonka"]
             }
         ];
@@ -827,6 +1000,7 @@
         // Variables globales
         let perfumes = [];
         let editingId = null;
+        let currentModalSlide = 0;
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
@@ -884,10 +1058,80 @@
             }).format(price);
         }
 
+        // Créer un slider pour un parfum
+        function createSlider(perfume, containerId, isModal = false) {
+            const images = perfume.images && perfume.images.length > 0 ? perfume.images : [];
+            const slidesCount = Math.max(images.length, 1);
+            
+            let slidesHTML = '';
+            let dotsHTML = '';
+            
+            // Créer les slides
+            for (let i = 0; i < 5; i++) {
+                if (images[i]) {
+                    slidesHTML += `
+                        <div class="${isModal ? 'modal-slide' : 'slider-slide'}" style="background-image: url('${images[i]}'); background-size: cover; background-position: center;">
+                            ${!isModal ? '<i class="fas fa-gem"></i>' : ''}
+                        </div>
+                    `;
+                } else {
+                    slidesHTML += `
+                        <div class="${isModal ? 'modal-slide' : 'slider-slide'}">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                    `;
+                }
+                
+                if (i < slidesCount) {
+                    dotsHTML += `<div class="${isModal ? 'modal-slider-dot' : 'slider-dot'} ${i === 0 ? 'active' : ''}" onclick="setSlide(${i}, '${containerId}', ${isModal})"></div>`;
+                }
+            }
+            
+            return { slidesHTML, dotsHTML, slidesCount };
+        }
+
+        // Changer de slide
+        function setSlide(index, containerId, isModal = false) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const transformValue = -index * 20 + '%';
+            container.style.transform = `translateX(${transformValue})`;
+            
+            // Mettre à jour les points de navigation
+            const dots = document.querySelectorAll(isModal ? '.modal-slider-dot' : '.slider-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+            
+            if (isModal) {
+                currentModalSlide = index;
+            }
+        }
+
+        // Changer de slide modal
+        function changeModalSlide(direction) {
+            const perfume = perfumes.find(p => p.id === window.currentModalPerfumeId);
+            if (!perfume) return;
+            
+            const slidesCount = Math.max(perfume.images.length, 1);
+            currentModalSlide = (currentModalSlide + direction + slidesCount) % slidesCount;
+            setSlide(currentModalSlide, 'modalSliderContainer', true);
+        }
+
         // Ouvrir le modal détaillé
         function openPerfumeModal(perfumeId) {
             const perfume = perfumes.find(p => p.id === perfumeId);
             if (perfume) {
+                window.currentModalPerfumeId = perfumeId;
+                currentModalSlide = 0;
+                
+                // Configurer le slider modal
+                const slider = createSlider(perfume, 'modalSliderContainer', true);
+                document.getElementById('modalSliderContainer').innerHTML = slider.slidesHTML;
+                document.getElementById('modalSliderNav').innerHTML = slider.dotsHTML;
+                setSlide(0, 'modalSliderContainer', true);
+                
                 document.getElementById('modalInfo').innerHTML = `
                     <h2 class="modal-name">${perfume.name}</h2>
                     <div class="modal-price">${formatPrice(perfume.price)} €</div>
@@ -936,10 +1180,24 @@
                 return;
             }
             
-            grid.innerHTML = perfumes.map(perfume => `
+            grid.innerHTML = perfumes.map(perfume => {
+                const slider = createSlider(perfume, `slider-${perfume.id}`);
+                
+                return `
                 <div class="perfume-card" onclick="openPerfumeModal(${perfume.id})">
-                    <div class="perfume-image">
-                        <i class="fas fa-gem"></i>
+                    <div class="perfume-slider">
+                        <div class="slider-container" id="slider-${perfume.id}">
+                            ${slider.slidesHTML}
+                        </div>
+                        <button class="slider-arrow prev" onclick="event.stopPropagation(); setSlide((currentSlide - 1 + ${slider.slidesCount}) % ${slider.slidesCount}, 'slider-${perfume.id}')">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="slider-arrow next" onclick="event.stopPropagation(); setSlide((currentSlide + 1) % ${slider.slidesCount}, 'slider-${perfume.id}')">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="slider-nav">
+                            ${slider.dotsHTML}
+                        </div>
                     </div>
                     <div class="perfume-info">
                         <h3 class="perfume-name">${perfume.name}</h3>
@@ -970,7 +1228,7 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // Rendu pour l'admin
@@ -982,10 +1240,24 @@
                 return;
             }
             
-            grid.innerHTML = perfumes.map(perfume => `
+            grid.innerHTML = perfumes.map(perfume => {
+                const slider = createSlider(perfume, `admin-slider-${perfume.id}`);
+                
+                return `
                 <div class="perfume-card">
-                    <div class="perfume-image">
-                        <i class="fas fa-gem"></i>
+                    <div class="perfume-slider">
+                        <div class="slider-container" id="admin-slider-${perfume.id}">
+                            ${slider.slidesHTML}
+                        </div>
+                        <button class="slider-arrow prev" onclick="event.stopPropagation(); setSlide((currentSlide - 1 + ${slider.slidesCount}) % ${slider.slidesCount}, 'admin-slider-${perfume.id}')">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="slider-arrow next" onclick="event.stopPropagation(); setSlide((currentSlide + 1) % ${slider.slidesCount}, 'admin-slider-${perfume.id}')">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="slider-nav">
+                            ${slider.dotsHTML}
+                        </div>
                     </div>
                     <div class="perfume-info">
                         <h3 class="perfume-name">${perfume.name}</h3>
@@ -1023,12 +1295,15 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // Gestion du formulaire admin
         function handleFormSubmit(e) {
             e.preventDefault();
+            
+            const imagesInput = document.getElementById('perfumeImages').value;
+            const images = imagesInput ? imagesInput.split(',').map(url => url.trim()).filter(url => url !== '') : [];
             
             const perfumeData = {
                 name: document.getElementById('perfumeName').value.trim(),
@@ -1036,6 +1311,7 @@
                 size: document.getElementById('perfumeSize').value.trim(),
                 gender: document.getElementById('perfumeGender').value,
                 price: parseFloat(document.getElementById('perfumePrice').value),
+                images: images.slice(0, 5), // Maximum 5 images
                 notes: document.getElementById('perfumeNotes').value.split(',').map(note => note.trim()).filter(note => note !== '')
             };
             
@@ -1089,6 +1365,7 @@
                 document.getElementById('perfumeGender').value = perfume.gender;
                 document.getElementById('perfumePrice').value = perfume.price;
                 document.getElementById('perfumeNotes').value = perfume.notes.join(', ');
+                document.getElementById('perfumeImages').value = perfume.images.join(', ');
                 editingId = id;
                 
                 // Scroll vers le formulaire
@@ -1110,6 +1387,9 @@
             }
         }
 
+        // Variables globales pour les sliders
+        let currentSlide = 0;
+
         // Rendre les fonctions accessibles globalement
         window.showClientAccess = showClientAccess;
         window.showAdminAccess = showAdminAccess;
@@ -1118,6 +1398,9 @@
         window.openPerfumeModal = openPerfumeModal;
         window.closeModal = closeModal;
         window.resetForm = resetForm;
+        window.setSlide = setSlide;
+        window.changeModalSlide = changeModalSlide;
+        window.currentSlide = currentSlide;
     </script>
 </body>
 </html>
