@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -146,7 +146,42 @@
             color: var(--primary-dark);
         }
 
-        /* Notification et inscription */
+        /* Protection sécurité */
+        .security-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 18, 11, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .security-modal {
+            background: linear-gradient(135deg, var(--secondary-dark), var(--warm-brown));
+            padding: 50px;
+            border: 2px solid var(--accent-gold);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .security-input {
+            width: 100%;
+            padding: 15px 20px;
+            margin: 20px 0;
+            background: rgba(26, 18, 11, 0.8);
+            border: 1px solid var(--accent-gold);
+            color: var(--text-light);
+            font-size: 1.1rem;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        /* Reste du CSS identique au précédent */
         .notification-banner {
             background: linear-gradient(135deg, var(--accent-gold), var(--dark-gold));
             color: var(--primary-dark);
@@ -187,12 +222,6 @@
             border-radius: 2px;
         }
 
-        .subscription-input:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-        }
-
-        /* Badge promo */
         .promo-badge {
             position: absolute;
             top: 20px;
@@ -219,7 +248,6 @@
             font-size: 2rem !important;
         }
 
-        /* Upload d'images */
         .image-upload-container {
             grid-column: 1 / -1;
         }
@@ -280,7 +308,6 @@
             font-size: 0.8rem;
         }
 
-        /* Reste du CSS identique au précédent */
         .access-panel {
             display: none;
             background: rgba(42, 28, 16, 0.8);
@@ -925,6 +952,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Protection de sécurité -->
+    <div class="security-overlay" id="securityOverlay">
+        <div class="security-modal">
+            <h2 style="color: var(--accent-gold); margin-bottom: 20px; font-size: 2rem;">
+                <i class="fas fa-shield-alt"></i> Accès Sécurisé
+            </h2>
+            <p style="color: var(--text-light); margin-bottom: 20px;">
+                Veuillez entrer le mot de passe administrateur
+            </p>
+            <input type="password" class="security-input" id="adminPassword" placeholder="Mot de passe administrateur">
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;">
+                <button class="luxury-btn" onclick="checkAdminPassword()">
+                    <i class="fas fa-key"></i> Accéder
+                </button>
+                <button class="luxury-btn luxury-btn-secondary" onclick="closeSecurity()">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="luxury-bg"></div>
     
     <div class="container">
@@ -1112,7 +1160,11 @@
     </div>
 
     <script>
-        // Données initiales
+        // MOT DE PASSE ADMIN SÉCURISÉ
+        const ADMIN_PASSWORD = "doHBDposcqksjnPibizabcqksjncsqiuPBDAP0827190I2`*¨M*%+*+¨1I820JANDPQ";
+        let isAdminAuthenticated = false;
+
+        // Données initiales complètes avec tous les parfums
         const initialPerfumes = [
             {
                 id: 1,
@@ -1126,6 +1178,97 @@
                 promoEndDate: "",
                 images: [],
                 notes: ["Piment", "Mandarine", "Incense", "Ciste", "Patchouli", "Fleurs d'oranger", "Tabac", "Praline", "Ambre", "Fèves de tonkas", "Bensoide"]
+            },
+            {
+                id: 2,
+                name: "Venezia Pistachio",
+                brand: "Gulf Fragance Dubai",
+                size: "80ml",
+                gender: "Unisexe",
+                price: 79.90,
+                hasPromo: true,
+                promoPrice: 69.90,
+                promoEndDate: "2025-02-28",
+                images: [],
+                notes: ["Pistaches", "Amandes", "Crème fouettée", "Héliotrope", "Musc", "Bois de santal"]
+            },
+            {
+                id: 3,
+                name: "Yara Rose",
+                brand: "Lattafa",
+                size: "100ml / 35ml",
+                gender: "Féminin",
+                price: 69.90,
+                hasPromo: false,
+                promoPrice: 0,
+                promoEndDate: "",
+                images: [],
+                notes: ["Mandarine", "Poire", "Orchidée", "Vanille", "Bois de santale", "Musc", "Héliotrope", "Bergamote"]
+            },
+            {
+                id: 4,
+                name: "Yara Blanc",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Féminin",
+                price: 65.90,
+                hasPromo: true,
+                promoPrice: 55.90,
+                promoEndDate: "2025-01-31",
+                images: [],
+                notes: ["Jasmin", "Pêche", "Ambre", "Caramel", "Bois de santal", "Patchouli"]
+            },
+            {
+                id: 5,
+                name: "Yara Black",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Masculin",
+                price: 74.90,
+                hasPromo: false,
+                promoPrice: 0,
+                promoEndDate: "",
+                images: [],
+                notes: ["Ananas", "Tabac", "Poivre noir", "Vanille", "Café", "Patchouli", "Ambre", "Benjoin", "Bois", "Labdanum"]
+            },
+            {
+                id: 6,
+                name: "Ameerat al Arab Rouge",
+                brand: "Lattafa",
+                size: "50ml",
+                gender: "Féminin",
+                price: 59.90,
+                hasPromo: false,
+                promoPrice: 0,
+                promoEndDate: "",
+                images: [],
+                notes: ["Pamplemousse", "Orange", "Jasmin", "Muse Blanc", "Ambre", "Bois de santal", "Vanille", "Fèves de Tonka"]
+            },
+            {
+                id: 7,
+                name: "Khamrah",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Unisexe",
+                price: 85.90,
+                hasPromo: true,
+                promoPrice: 75.90,
+                promoEndDate: "2025-02-15",
+                images: [],
+                notes: ["Cannelle", "Noix de muscade", "Vanille", "Ambre", "Sucre brun", "Tonka"]
+            },
+            {
+                id: 8,
+                name: "Ana Abiyedh Rouge",
+                brand: "Lattafa",
+                size: "100ml",
+                gender: "Féminin",
+                price: 62.90,
+                hasPromo: false,
+                promoPrice: 0,
+                promoEndDate: "",
+                images: [],
+                notes: ["Framboise", "Pomme", "Violette", "Musc", "Ambre", "Bois de santal"]
             }
         ];
 
@@ -1136,11 +1279,68 @@
         let uploadedImages = [];
         let subscribers = JSON.parse(localStorage.getItem('bahjatSubscribers')) || [];
 
-        // Initialisation
+        // Initialisation sécurisée
         document.addEventListener('DOMContentLoaded', function() {
+            // Protection contre l'inspection
+            setupSecurityProtection();
             loadPerfumes();
             setupEventListeners();
         });
+
+        // Configuration de la protection sécurité
+        function setupSecurityProtection() {
+            // Bloquer l'inspection
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                    e.preventDefault();
+                    return false;
+                }
+                if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                    e.preventDefault();
+                    return false;
+                }
+                if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                    e.preventDefault();
+                    return false;
+                }
+                if (e.key === 'F12') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Masquer les données sensibles dans la console
+            console.log('%c🔒 Accès sécurisé - Bahjat Al Atr', 'color: #D4AF37; font-size: 16px; font-weight: bold;');
+            console.log('%c⚠️  Cet espace est protégé', 'color: #e74c3c; font-size: 14px;');
+        }
+
+        // Vérification du mot de passe admin
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                isAdminAuthenticated = true;
+                document.getElementById('securityOverlay').style.display = 'none';
+                document.getElementById('adminPanel').classList.add('active');
+                document.getElementById('clientPanel').classList.remove('active');
+                renderAdminPerfumes();
+                // Effacer le champ de mot de passe
+                document.getElementById('adminPassword').value = '';
+            } else {
+                alert('Mot de passe incorrect');
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+            }
+        }
+
+        function closeSecurity() {
+            document.getElementById('securityOverlay').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+        }
 
         // Configuration des écouteurs d'événements
         function setupEventListeners() {
@@ -1157,7 +1357,6 @@
                 savePerfumes();
             }
             renderClientPerfumes();
-            renderAdminPerfumes();
         }
 
         // Sauvegarder les parfums
@@ -1167,20 +1366,22 @@
 
         // Afficher l'accès client
         function showClientAccess() {
-            document.getElementById('clientPanel').classList.add('active');
-            document.getElementById('adminPanel').classList.remove('active');
-            renderClientPerfumes();
+            if (!isAdminAuthenticated) {
+                document.getElementById('clientPanel').classList.add('active');
+                document.getElementById('adminPanel').classList.remove('active');
+                renderClientPerfumes();
+            }
         }
 
         // Afficher l'accès admin
         function showAdminAccess() {
-            const password = prompt('Mot de passe administrateur :');
-            if (password === "doHBDposcqksjnPibizabcqksjncsqiuPBDAP0827190I2`*¨M*%+*+¨1I820JANDPQ") {
+            if (!isAdminAuthenticated) {
+                document.getElementById('securityOverlay').style.display = 'flex';
+                document.getElementById('adminPassword').focus();
+            } else {
                 document.getElementById('adminPanel').classList.add('active');
                 document.getElementById('clientPanel').classList.remove('active');
                 renderAdminPerfumes();
-            } else {
-                alert('Accès refusé');
             }
         }
 
@@ -1254,11 +1455,11 @@
                 subscribers.push(email);
                 localStorage.setItem('bahjatSubscribers', JSON.stringify(subscribers));
                 messageEl.textContent = 'Inscription réussie ! Vous recevrez des notifications pour les nouveaux parfums.';
-                messageEl.style.color = var('--accent-gold');
+                messageEl.style.color = '#D4AF37';
                 document.getElementById('subscriberEmail').value = '';
             } else {
                 messageEl.textContent = 'Cette adresse email est déjà inscrite.';
-                messageEl.style.color = var('--text-gray');
+                messageEl.style.color = '#A8A8A8';
             }
         }
 
@@ -1271,8 +1472,8 @@
         // Envoyer les notifications
         function sendNewPerfumeNotification(perfumeName) {
             if (subscribers.length > 0) {
-                // Simuler l'envoi d'emails (dans un vrai site, utiliser un service d'email)
-                console.log(`Notification envoyée à ${subscribers.length} abonnés pour le nouveau parfum: ${perfumeName}`);
+                // Simuler l'envoi d'emails
+                console.log(`📧 Notification envoyée à ${subscribers.length} abonnés pour: ${perfumeName}`);
                 
                 // Afficher la bannière de notification
                 const banner = document.getElementById('notificationBanner');
@@ -1291,7 +1492,6 @@
             let slidesHTML = '';
             let dotsHTML = '';
             
-            // Créer les slides
             for (let i = 0; i < 5; i++) {
                 if (images[i]) {
                     slidesHTML += `
@@ -1323,7 +1523,6 @@
             const transformValue = -index * 20 + '%';
             container.style.transform = `translateX(${transformValue})`;
             
-            // Mettre à jour les points de navigation
             const dots = document.querySelectorAll(isModal ? '.modal-slider-dot' : '.slider-dot');
             dots.forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
@@ -1351,13 +1550,11 @@
                 window.currentModalPerfumeId = perfumeId;
                 currentModalSlide = 0;
                 
-                // Configurer le slider modal
                 const slider = createSlider(perfume, 'modalSliderContainer', true);
                 document.getElementById('modalSliderContainer').innerHTML = slider.slidesHTML;
                 document.getElementById('modalSliderNav').innerHTML = slider.dotsHTML;
                 setSlide(0, 'modalSliderContainer', true);
                 
-                // Afficher les prix avec promo si applicable
                 let priceHTML = '';
                 if (perfume.hasPromo && new Date(perfume.promoEndDate) > new Date()) {
                     priceHTML = `
@@ -1574,6 +1771,11 @@
         function handleFormSubmit(e) {
             e.preventDefault();
             
+            if (!isAdminAuthenticated) {
+                alert('Accès non autorisé');
+                return;
+            }
+            
             const isNewPerfume = !editingId;
             const perfumeData = {
                 name: document.getElementById('perfumeName').value.trim(),
@@ -1592,7 +1794,6 @@
                 updatePerfume(editingId, perfumeData);
             } else {
                 addPerfume(perfumeData);
-                // Envoyer les notifications seulement pour les nouveaux parfums
                 if (isNewPerfume) {
                     sendNewPerfumeNotification(perfumeData.name);
                 }
@@ -1633,6 +1834,11 @@
         }
 
         function editPerfume(id) {
+            if (!isAdminAuthenticated) {
+                alert('Accès non autorisé');
+                return;
+            }
+            
             const perfume = perfumes.find(p => p.id === id);
             if (perfume) {
                 document.getElementById('perfumeId').value = perfume.id;
@@ -1652,7 +1858,6 @@
                 
                 editingId = id;
                 
-                // Scroll vers le formulaire
                 document.getElementById('perfumeForm').scrollIntoView({ behavior: 'smooth' });
             }
         }
@@ -1693,6 +1898,8 @@
         window.removeImage = removeImage;
         window.subscribeToNotifications = subscribeToNotifications;
         window.togglePromoFields = togglePromoFields;
+        window.checkAdminPassword = checkAdminPassword;
+        window.closeSecurity = closeSecurity;
     </script>
 </body>
 </html>
