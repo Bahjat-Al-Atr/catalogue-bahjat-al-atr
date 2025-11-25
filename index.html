@@ -384,10 +384,13 @@
 
         /* CORRECTIONS POUR LES SLIDERS D'IMAGES */
         .perfume-slider {
-            height: 350px;
+            height: 400px;
             position: relative;
             overflow: hidden;
             background: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .slider-container {
@@ -409,9 +412,11 @@
         .slider-slide img {
             width: auto;
             height: auto;
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 95%;
+            max-height: 95%;
             object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
 
         .slider-nav {
@@ -606,6 +611,9 @@
             position: relative;
             overflow: hidden;
             background: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-slider-container {
@@ -627,9 +635,11 @@
         .modal-slide img {
             width: auto;
             height: auto;
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 95%;
+            max-height: 95%;
             object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
 
         .modal-slider-nav {
@@ -935,7 +945,7 @@
             }
 
             .perfume-slider {
-                height: 250px;
+                height: 300px;
             }
         }
 
@@ -1109,8 +1119,8 @@
                             <i class="fas fa-cloud-upload-alt"></i>
                             <p>Cliquez pour uploader des images</p>
                             <p style="font-size: 0.8rem; color: var(--text-gray); margin-top: 5px;">
-                                Maximum 5 images, formats supportés: JPG, PNG, WEBP<br>
-                                Taille max: 5MB par image
+                                Maximum 5 images, tous formats supportés<br>
+                                Compression automatique activée
                             </p>
                         </div>
                         <input type="file" id="imageUpload" multiple accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
@@ -1175,7 +1185,7 @@
 
     <script>
         // MOT DE PASSE ADMIN SÉCURISÉ
-        const ADMIN_PASSWORD = "doHBDposcqksjnPibizabcqksjncsqiuPBDAP0827190I2`*¨M*%+*+¨1I820JANDPQ";
+        const ADMIN_PASSWORD = "doHBDposcqksjnPibizabcqksjncsqiuPBDAP0827190I2`*¨M*%+*+¨1I820JANDPQPDCBZEPIUBZpdDJBEDÊZBFDBDOBDEOZBÇÉ! ÉÇÇ I&)IE&)E&ÊÙ&MEAÙZD:AÙ`:ù;^m;l,ùpdfnzqeâeàfçhHJ »À^ÇÉU')TÇUÉ$)ÀEjfà^f,FZ,Z,";
         let isAdminAuthenticated = false;
 
         // Variables globales
@@ -1184,6 +1194,72 @@
         let currentModalSlide = 0;
         let uploadedImages = [];
         let subscribers = JSON.parse(localStorage.getItem('bahjatSubscribers')) || [];
+
+        // CORRECTION: Fonction pour compresser les images
+        function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
+            return new Promise((resolve, reject) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                img.onload = function() {
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Redimensionner si nécessaire
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                    if (height > maxHeight) {
+                        width = (width * maxHeight) / height;
+                        height = maxHeight;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Convertir en base64 avec compression
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                    resolve(compressedDataUrl);
+                };
+
+                img.onerror = reject;
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        // CORRECTION: Gestion de l'upload avec compression
+        async function handleImageUpload(event) {
+            const files = event.target.files;
+            const maxFiles = 5;
+            
+            if (files.length + uploadedImages.length > maxFiles) {
+                alert(`Maximum ${maxFiles} images autorisées. Vous avez déjà ${uploadedImages.length} images.`);
+                return;
+            }
+
+            for (let file of files) {
+                if (!file.type.startsWith('image/')) {
+                    alert('Seules les images sont autorisées');
+                    continue;
+                }
+                
+                try {
+                    // Compresser l'image avant de l'ajouter
+                    const compressedImage = await compressImage(file);
+                    uploadedImages.push(compressedImage);
+                    updateUploadedImagesDisplay();
+                    updateImageCounter();
+                } catch (error) {
+                    console.error('Erreur compression:', error);
+                    alert('Erreur lors du traitement de l\'image ' + file.name);
+                }
+            }
+            event.target.value = '';
+        }
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
@@ -1283,41 +1359,6 @@
             promoFields.style.display = hasPromo ? 'block' : 'none';
         }
 
-        // Gestion de l'upload d'images
-        function handleImageUpload(event) {
-            const files = event.target.files;
-            const maxFiles = 5;
-            
-            if (files.length + uploadedImages.length > maxFiles) {
-                alert(`Maximum ${maxFiles} images autorisées. Vous avez déjà ${uploadedImages.length} images.`);
-                return;
-            }
-
-            for (let file of files) {
-                if (!file.type.startsWith('image/')) {
-                    alert('Seules les images sont autorisées');
-                    continue;
-                }
-                
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('L\'image ' + file.name + ' est trop volumineuse. Maximum 5MB autorisé.');
-                    continue;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedImages.push(e.target.result);
-                    updateUploadedImagesDisplay();
-                    updateImageCounter();
-                };
-                reader.onerror = function() {
-                    alert('Erreur lors du chargement de l\'image ' + file.name);
-                };
-                reader.readAsDataURL(file);
-            }
-            event.target.value = '';
-        }
-
         // Mettre à jour l'affichage des images uploadées
         function updateUploadedImagesDisplay() {
             const container = document.getElementById('uploadedImages');
@@ -1357,7 +1398,7 @@
             }
         }
 
-        // CORRECTION CRITIQUE : Gestion du formulaire
+        // Gestion du formulaire
         function handleFormSubmit(e) {
             console.log('Début de handleFormSubmit');
             
@@ -1522,7 +1563,7 @@
             console.log('Formulaire réinitialisé');
         }
 
-        // Reste des fonctions (renderClientPerfumes, renderAdminPerfumes, etc.)
+        // Reste des fonctions de rendu
         function renderClientPerfumes() {
             const grid = document.getElementById('clientPerfumeGrid');
             if (!grid) return;
