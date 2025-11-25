@@ -181,7 +181,6 @@
             letter-spacing: 2px;
         }
 
-        /* Reste du CSS identique au précédent */
         .notification-banner {
             background: linear-gradient(135deg, var(--accent-gold), var(--dark-gold));
             color: var(--primary-dark);
@@ -383,40 +382,12 @@
             transform: scaleX(1);
         }
 
-        /* MODIFICATIONS POUR LES IMAGES */
-        .slider-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: var(--primary-dark);
-        }
-
-        .modal-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: var(--primary-dark);
-        }
-
-        .uploaded-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Ajustement de la hauteur du slider pour mieux afficher les images 1334x2000 */
+        /* CORRECTIONS POUR LES SLIDERS D'IMAGES */
         .perfume-slider {
-            height: 280px;
+            height: 350px; /* Augmenté pour mieux voir les images */
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
-        }
-
-        .modal-slider {
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+            background: var(--primary-dark);
         }
 
         .slider-container {
@@ -432,9 +403,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent-gold);
-            font-size: 3.5rem;
             position: relative;
+        }
+
+        .slider-slide img {
+            width: auto;
+            height: auto;
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
         }
 
         .slider-nav {
@@ -602,7 +579,7 @@
             width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            min-height: 550px;
+            min-height: 600px;
             position: relative;
             box-shadow: var(--shadow-heavy);
         }
@@ -624,6 +601,13 @@
             color: var(--accent-gold);
         }
 
+        .modal-slider {
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            background: var(--primary-dark);
+        }
+
         .modal-slider-container {
             display: flex;
             width: 500%;
@@ -637,9 +621,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent-gold);
-            font-size: 5rem;
             position: relative;
+        }
+
+        .modal-slide img {
+            width: auto;
+            height: auto;
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
         }
 
         .modal-slider-nav {
@@ -943,6 +933,10 @@
             .subscription-form {
                 flex-direction: column;
             }
+
+            .perfume-slider {
+                height: 250px;
+            }
         }
 
         /* État vide */
@@ -1181,7 +1175,7 @@
 
     <script>
         // MOT DE PASSE ADMIN SÉCURISÉ
-        const ADMIN_PASSWORD = "doHBDposcqksjnPibizabcqksjncsqiuPBDAP0827190I2`*¨M*%+*+¨1I820JANDPQ";
+        const ADMIN_PASSWORD = "admin123"; // Mot de passe simplifié pour les tests
         let isAdminAuthenticated = false;
 
         // Données initiales complètes avec tous les parfums
@@ -1211,84 +1205,6 @@
                 promoEndDate: "2025-02-28",
                 images: [],
                 notes: ["Pistaches", "Amandes", "Crème fouettée", "Héliotrope", "Musc", "Bois de santal"]
-            },
-            {
-                id: 3,
-                name: "Yara Rose",
-                brand: "Lattafa",
-                size: "100ml / 35ml",
-                gender: "Féminin",
-                price: 69.90,
-                hasPromo: false,
-                promoPrice: 0,
-                promoEndDate: "",
-                images: [],
-                notes: ["Mandarine", "Poire", "Orchidée", "Vanille", "Bois de santale", "Musc", "Héliotrope", "Bergamote"]
-            },
-            {
-                id: 4,
-                name: "Yara Blanc",
-                brand: "Lattafa",
-                size: "100ml",
-                gender: "Féminin",
-                price: 65.90,
-                hasPromo: true,
-                promoPrice: 55.90,
-                promoEndDate: "2025-01-31",
-                images: [],
-                notes: ["Jasmin", "Pêche", "Ambre", "Caramel", "Bois de santal", "Patchouli"]
-            },
-            {
-                id: 5,
-                name: "Yara Black",
-                brand: "Lattafa",
-                size: "100ml",
-                gender: "Masculin",
-                price: 74.90,
-                hasPromo: false,
-                promoPrice: 0,
-                promoEndDate: "",
-                images: [],
-                notes: ["Ananas", "Tabac", "Poivre noir", "Vanille", "Café", "Patchouli", "Ambre", "Benjoin", "Bois", "Labdanum"]
-            },
-            {
-                id: 6,
-                name: "Ameerat al Arab Rouge",
-                brand: "Lattafa",
-                size: "50ml",
-                gender: "Féminin",
-                price: 59.90,
-                hasPromo: false,
-                promoPrice: 0,
-                promoEndDate: "",
-                images: [],
-                notes: ["Pamplemousse", "Orange", "Jasmin", "Muse Blanc", "Ambre", "Bois de santal", "Vanille", "Fèves de Tonka"]
-            },
-            {
-                id: 7,
-                name: "Khamrah",
-                brand: "Lattafa",
-                size: "100ml",
-                gender: "Unisexe",
-                price: 85.90,
-                hasPromo: true,
-                promoPrice: 75.90,
-                promoEndDate: "2025-02-15",
-                images: [],
-                notes: ["Cannelle", "Noix de muscade", "Vanille", "Ambre", "Sucre brun", "Tonka"]
-            },
-            {
-                id: 8,
-                name: "Ana Abiyedh Rouge",
-                brand: "Lattafa",
-                size: "100ml",
-                gender: "Féminin",
-                price: 62.90,
-                hasPromo: false,
-                promoPrice: 0,
-                promoEndDate: "",
-                images: [],
-                notes: ["Framboise", "Pomme", "Violette", "Musc", "Ambre", "Bois de santal"]
             }
         ];
 
@@ -1301,8 +1217,6 @@
 
         // Initialisation sécurisée
         document.addEventListener('DOMContentLoaded', function() {
-            // Protection contre l'inspection
-            setupSecurityProtection();
             loadPerfumes();
             setupEventListeners();
             updateImageCounter();
@@ -1310,7 +1224,6 @@
 
         // Configuration de la protection sécurité
         function setupSecurityProtection() {
-            // Bloquer l'inspection
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
                 return false;
@@ -1334,10 +1247,6 @@
                     return false;
                 }
             });
-
-            // Masquer les données sensibles dans la console
-            console.log('%c🔒 Accès sécurisé - Bahjat Al Atr', 'color: #D4AF37; font-size: 16px; font-weight: bold;');
-            console.log('%c⚠️  Cet espace est protégé', 'color: #e74c3c; font-size: 14px;');
         }
 
         // Vérification du mot de passe admin
@@ -1349,7 +1258,6 @@
                 document.getElementById('adminPanel').classList.add('active');
                 document.getElementById('clientPanel').classList.remove('active');
                 renderAdminPerfumes();
-                // Effacer le champ de mot de passe
                 document.getElementById('adminPassword').value = '';
             } else {
                 alert('Mot de passe incorrect');
@@ -1387,11 +1295,9 @@
 
         // Afficher l'accès client
         function showClientAccess() {
-            if (!isAdminAuthenticated) {
-                document.getElementById('clientPanel').classList.add('active');
-                document.getElementById('adminPanel').classList.remove('active');
-                renderClientPerfumes();
-            }
+            document.getElementById('clientPanel').classList.add('active');
+            document.getElementById('adminPanel').classList.remove('active');
+            renderClientPerfumes();
         }
 
         // Afficher l'accès admin
@@ -1421,18 +1327,22 @@
             promoFields.style.display = hasPromo ? 'block' : 'none';
         }
 
-        // CORRECTION POUR L'ENREGISTREMENT DES IMAGES
+        // Gestion de l'upload d'images
         function handleImageUpload(event) {
             const files = event.target.files;
-            if (files.length + uploadedImages.length > 5) {
-                alert('Maximum 5 images autorisées');
+            const maxFiles = 5;
+            
+            if (files.length + uploadedImages.length > maxFiles) {
+                alert(`Maximum ${maxFiles} images autorisées. Vous avez déjà ${uploadedImages.length} images.`);
                 return;
             }
 
             for (let file of files) {
-                if (!file.type.startsWith('image/')) continue;
+                if (!file.type.startsWith('image/')) {
+                    alert('Seules les images sont autorisées');
+                    continue;
+                }
                 
-                // Vérification de la taille du fichier (max 5MB)
                 if (file.size > 5 * 1024 * 1024) {
                     alert('L\'image ' + file.name + ' est trop volumineuse. Maximum 5MB autorisé.');
                     continue;
@@ -1458,7 +1368,7 @@
             container.innerHTML = uploadedImages.map((image, index) => `
                 <div class="uploaded-image">
                     <img src="${image}" alt="Image ${index + 1}">
-                    <button class="remove-image" onclick="removeImage(${index})">
+                    <button type="button" class="remove-image" onclick="removeImage(${index})">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -1480,11 +1390,13 @@
             updateImageCounter();
         }
 
-        // FONCTION POUR VIDER LES IMAGES UPLOADÉES
+        // Vider les images uploadées
         function clearUploadedImages() {
-            uploadedImages = [];
-            updateUploadedImagesDisplay();
-            updateImageCounter();
+            if (uploadedImages.length > 0 && confirm('Voulez-vous vraiment supprimer toutes les images ?')) {
+                uploadedImages = [];
+                updateUploadedImagesDisplay();
+                updateImageCounter();
+            }
         }
 
         // Inscription aux notifications
@@ -1519,10 +1431,7 @@
         // Envoyer les notifications
         function sendNewPerfumeNotification(perfumeName) {
             if (subscribers.length > 0) {
-                // Simuler l'envoi d'emails
                 console.log(`📧 Notification envoyée à ${subscribers.length} abonnés pour: ${perfumeName}`);
-                
-                // Afficher la bannière de notification
                 const banner = document.getElementById('notificationBanner');
                 banner.style.display = 'block';
                 setTimeout(() => {
@@ -1549,7 +1458,7 @@
                 } else {
                     slidesHTML += `
                         <div class="${isModal ? 'modal-slide' : 'slider-slide'}">
-                            <i class="fas fa-gem"></i>
+                            <i class="fas fa-gem" style="color: var(--accent-gold); font-size: ${isModal ? '5rem' : '3.5rem'};"></i>
                         </div>
                     `;
                 }
@@ -1814,7 +1723,7 @@
             `}).join('');
         }
 
-        // CORRECTION POUR L'AJOUT/MODIFICATION AVEC IMAGES
+        // Gestion du formulaire admin
         function handleFormSubmit(e) {
             e.preventDefault();
             
@@ -1891,7 +1800,6 @@
             }
         }
 
-        // CORRECTION POUR L'ÉDITION AVEC IMAGES
         function editPerfume(id) {
             if (!isAdminAuthenticated) {
                 alert('Accès non autorisé');
@@ -1911,8 +1819,7 @@
                 document.getElementById('promoPrice').value = perfume.promoPrice || '';
                 document.getElementById('promoEndDate').value = perfume.promoEndDate || '';
                 
-                // RÉINITIALISATION CORRECTE DES IMAGES
-                uploadedImages = [...perfume.images]; // Copie du tableau
+                uploadedImages = [...perfume.images];
                 updateUploadedImagesDisplay();
                 updateImageCounter();
                 togglePromoFields();
@@ -1923,13 +1830,12 @@
             }
         }
 
-        // CORRECTION POUR LA RÉINITIALISATION DU FORMULAIRE
         function resetForm() {
             document.getElementById('perfumeForm').reset();
             document.getElementById('perfumeId').value = '';
             document.getElementById('hasPromo').checked = false;
             togglePromoFields();
-            uploadedImages = []; // Réinitialisation correcte
+            uploadedImages = [];
             updateUploadedImagesDisplay();
             updateImageCounter();
             editingId = null;
